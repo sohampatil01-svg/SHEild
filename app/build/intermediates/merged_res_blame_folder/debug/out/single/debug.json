@@ -1,0 +1,70 @@
+[
+    {
+        "merged": "com.example.fakecalldistress.app-merged_res-34:/drawable_ic_launcher_legacy.xml.flat",
+        "source": "com.example.fakecalldistress.app-main-36:/drawable/ic_launcher_legacy.xml"
+    },
+    {
+        "merged": "com.example.fakecalldistress.app-merged_res-34:/layout_activity_splash.xml.flat",
+        "source": "com.example.fakecalldistress.app-main-36:/layout/activity_splash.xml"
+    },
+    {
+        "merged": "com.example.fakecalldistress.app-merged_res-34:/xml_data_extraction_rules.xml.flat",
+        "source": "com.example.fakecalldistress.app-main-36:/xml/data_extraction_rules.xml"
+    },
+    {
+        "merged": "com.example.fakecalldistress.app-merged_res-34:/mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "com.example.fakecalldistress.app-main-36:/mipmap-anydpi-v26/ic_launcher.xml"
+    },
+    {
+        "merged": "com.example.fakecalldistress.app-merged_res-34:/layout_activity_login.xml.flat",
+        "source": "com.example.fakecalldistress.app-main-36:/layout/activity_login.xml"
+    },
+    {
+        "merged": "com.example.fakecalldistress.app-merged_res-34:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "com.example.fakecalldistress.app-main-36:/mipmap-anydpi-v26/ic_launcher_round.xml"
+    },
+    {
+        "merged": "com.example.fakecalldistress.app-merged_res-34:/layout_item_dashboard_settings.xml.flat",
+        "source": "com.example.fakecalldistress.app-main-36:/layout/item_dashboard_settings.xml"
+    },
+    {
+        "merged": "com.example.fakecalldistress.app-merged_res-34:/drawable_bg_sos_gradient.xml.flat",
+        "source": "com.example.fakecalldistress.app-main-36:/drawable/bg_sos_gradient.xml"
+    },
+    {
+        "merged": "com.example.fakecalldistress.app-merged_res-34:/layout_activity_main.xml.flat",
+        "source": "com.example.fakecalldistress.app-main-36:/layout/activity_main.xml"
+    },
+    {
+        "merged": "com.example.fakecalldistress.app-merged_res-34:/layout_item_timeline_log.xml.flat",
+        "source": "com.example.fakecalldistress.app-main-36:/layout/item_timeline_log.xml"
+    },
+    {
+        "merged": "com.example.fakecalldistress.app-merged_res-34:/xml_backup_rules.xml.flat",
+        "source": "com.example.fakecalldistress.app-main-36:/xml/backup_rules.xml"
+    },
+    {
+        "merged": "com.example.fakecalldistress.app-merged_res-34:/drawable_bg_call_btn.xml.flat",
+        "source": "com.example.fakecalldistress.app-main-36:/drawable/bg_call_btn.xml"
+    },
+    {
+        "merged": "com.example.fakecalldistress.app-merged_res-34:/layout_activity_fake_call.xml.flat",
+        "source": "com.example.fakecalldistress.app-main-36:/layout/activity_fake_call.xml"
+    },
+    {
+        "merged": "com.example.fakecalldistress.app-merged_res-34:/anim_pulse.xml.flat",
+        "source": "com.example.fakecalldistress.app-main-36:/anim/pulse.xml"
+    },
+    {
+        "merged": "com.example.fakecalldistress.app-merged_res-34:/drawable_ic_shield_logo.xml.flat",
+        "source": "com.example.fakecalldistress.app-main-36:/drawable/ic_shield_logo.xml"
+    },
+    {
+        "merged": "com.example.fakecalldistress.app-merged_res-34:/menu_bottom_nav_menu.xml.flat",
+        "source": "com.example.fakecalldistress.app-main-36:/menu/bottom_nav_menu.xml"
+    },
+    {
+        "merged": "com.example.fakecalldistress.app-merged_res-34:/drawable_bg_rounded_grey.xml.flat",
+        "source": "com.example.fakecalldistress.app-main-36:/drawable/bg_rounded_grey.xml"
+    }
+]
