@@ -1,1 +1,1 @@
-<?xml version="1.0" encoding="utf-8"?><resources><style name=\"SafetyCheckbox\" parent=\"Widget.AppCompat.CompoundButton.CheckBox\"><item name=\"android:buttonTint\">#1976D2</item></style></resources>
+<?xml version="1.0" encoding="utf-8"?><resources><style name="SafetyCheckbox" parent="Widget.AppCompat.CompoundButton.CheckBox"><item name="android:buttonTint">#1976D2</item></style></resources>

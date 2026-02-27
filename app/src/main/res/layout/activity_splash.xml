@@ -1,1 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>\n<RelativeLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\n    android:layout_width=\"match_parent\"\n    android:layout_height=\"match_parent\"\n    android:background=\"#FFFFFF\">\n    <ImageView\n        android:layout_width=\"200dp\"\n        android:layout_height=\"200dp\"\n        android:layout_centerInParent=\"true\"\n        android:src=\"@drawable/ic_call\" />\n</RelativeLayout>
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF">
+    <ImageView
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_centerInParent="true"
+        android:src="@drawable/ic_call" />
+</RelativeLayout>

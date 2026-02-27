@@ -1,1 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>\n<View xmlns:android=\"http://schemas.android.com/apk/res/android\"\n    android:layout_width=\"match_parent\"\n    android:layout_height=\"60dp\"\n    android:background=\"#E0E0E0\" />
+<?xml version="1.0" encoding="utf-8"?>
+<View xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:background="#E0E0E0" />

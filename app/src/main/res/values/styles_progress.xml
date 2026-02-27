@@ -1,1 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>\n<resources>\n    <style name=\"LoadingProgress\" parent=\"Widget.AppCompat.ProgressBar\">\n        <item name=\"android:indeterminateTint\">#0000FF</item>\n    </style>\n</resources>
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="LoadingProgress" parent="Widget.AppCompat.ProgressBar">
+        <item name="android:indeterminateTint">#0000FF</item>
+    </style>
+</resources>

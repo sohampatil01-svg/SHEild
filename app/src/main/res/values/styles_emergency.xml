@@ -1,1 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>\n<resources>\n    <style name=\"EmergencyButton\" parent=\"Widget.AppCompat.Button\">\n        <item name=\"android:background\">#FF0000</item>\n        <item name=\"android:textColor\">#FFFFFF</item>\n        <item name=\"android:textStyle\">bold</item>\n    </style>\n</resources>
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="EmergencyButton" parent="Widget.AppCompat.Button">
+        <item name="android:background">#FF0000</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+</resources>

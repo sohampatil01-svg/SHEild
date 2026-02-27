@@ -1,1 +1,20 @@
-<?xml version="1.0" encoding="utf-8"?>\n<androidx.constraintlayout.widget.ConstraintLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\n    android:layout_width=\"match_parent\"\n    android:layout_height=\"match_parent\"\n    android:background=\"@color/sheild_background\">\n    <com.google.android.material.card.MaterialCardView\n        android:id=\"@+id/sosCard\"\n        style=\"@style/DashboardCard\"\n        android:layout_width=\"match_parent\"\n        android:layout_height=\"wrap_content\"\n        app:layout_constraintTop_toTopOf=\"parent\">\n        <TextView\n            android:layout_width=\"wrap_content\"\n            android:layout_height=\"wrap_content\"\n            android:text=\"SOS EMERGENCY\"\n            android:textColor=\"@color/sheild_red_alert\"\n            android:textStyle=\"bold\" />\n    </com.google.android.material.card.MaterialCardView>\n</androidx.constraintlayout.widget.ConstraintLayout>
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/sheild_background">
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/sosCard"
+        style="@style/DashboardCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SOS EMERGENCY"
+            android:textColor="@color/sheild_red_alert"
+            android:textStyle="bold" />
+    </com.google.android.material.card.MaterialCardView>
+</androidx.constraintlayout.widget.ConstraintLayout>
