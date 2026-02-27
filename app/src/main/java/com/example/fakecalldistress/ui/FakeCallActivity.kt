@@ -207,50 +207,61 @@ class FakeCallActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         finish()
     }
 
-    private fun initSpeechRecognizer() {
-        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this)
-        speechRecognizer?.setRecognitionListener(object : RecognitionListener {
-            override fun onReadyForSpeech(params: Bundle?) {}
-            override fun onBeginningOfSpeech() {}
-            override fun onRmsChanged(rmsdB: Float) {}
-            override fun onBufferReceived(buffer: ByteArray?) {}
-            override fun onEndOfSpeech() {}
-            
-            override fun onError(error: Int) { 
-                isRecognizing = false 
-                // Auto-restart listening if there's an error (e.g., no speech detected timeout)
-                if (selectedSkin == "android" && binding.groupAndroidInCall.visibility == View.VISIBLE ||
-                    selectedSkin == "ios" && binding.groupIosInCall.visibility == View.VISIBLE) {
-                    Handler(Looper.getMainLooper()).postDelayed({
-                        startListening()
-                    }, 1000)
+        private fun initSpeechRecognizer() {
+            speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this)
+            speechRecognizer?.setRecognitionListener(object : RecognitionListener {
+                override fun onReadyForSpeech(params: Bundle?) {
+                    isRecognizing = true
                 }
-            }
-            
-            override fun onResults(results: Bundle?) {
-                val matches = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-                if (!matches.isNullOrEmpty()) {
-                    processVoiceInput(matches[0])
+                override fun onBeginningOfSpeech() {}
+                override fun onRmsChanged(rmsdB: Float) {}
+                override fun onBufferReceived(buffer: ByteArray?) {}
+                override fun onEndOfSpeech() {
+                    isRecognizing = false
                 }
-                isRecognizing = false
-            }
-            
-            override fun onPartialResults(partialResults: Bundle?) {
-                val matches = partialResults?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-                if (!matches.isNullOrEmpty()) {
-                    val text = matches[0].lowercase(Locale.getDefault())
-                    if (text.contains("help") || text.contains("emergency") || text.contains("yes") || text.contains("okay")) {
-                        processVoiceInput(matches[0])
-                        speechRecognizer?.cancel()
-                        isRecognizing = false
+    
+                override fun onError(error: Int) {
+                    isRecognizing = false
+                    // Ignore transient errors and keep listening
+                    if (error == SpeechRecognizer.ERROR_NO_MATCH || error == SpeechRecognizer.ERROR_SPEECH_TIMEOUT) {
+                        if ((selectedSkin == "android" && binding.groupAndroidInCall.visibility == View.VISIBLE) ||
+                            (selectedSkin == "ios" && binding.groupIosInCall.visibility == View.VISIBLE)) {
+                            Handler(Looper.getMainLooper()).postDelayed({
+                                startListening()
+                            }, 500)
+                        }
                     }
                 }
-            }
-            
-            override fun onEvent(eventType: Int, params: Bundle?) {}
-        })
-    }
-
+    
+                override fun onResults(results: Bundle?) {
+                    isRecognizing = false
+                    val matches = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+                    if (!matches.isNullOrEmpty()) {
+                        processVoiceInput(matches[0])
+                    }
+                    
+                    // Keep listening after processing a full result
+                    if ((selectedSkin == "android" && binding.groupAndroidInCall.visibility == View.VISIBLE) ||
+                        (selectedSkin == "ios" && binding.groupIosInCall.visibility == View.VISIBLE)) {
+                        startListening()
+                    }
+                }
+    
+                override fun onPartialResults(partialResults: Bundle?) {
+                    val matches = partialResults?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+                    if (!matches.isNullOrEmpty()) {
+                        val text = matches[0].lowercase(Locale.getDefault())
+                        if (text.contains("help") || text.contains("emergency") || text.contains("yes") || text.contains("okay")) {
+                            speechRecognizer?.cancel()
+                            isRecognizing = false
+                            processVoiceInput(matches[0])
+                        }
+                    }
+                }
+    
+                override fun onEvent(eventType: Int, params: Bundle?) {}
+            })
+        }
     private fun startListening() {
         if (!isRecognizing) {
             val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
@@ -278,9 +289,6 @@ class FakeCallActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private fun answerCall() {
         ringtone?.stop()
         
-        val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
-        audioManager.mode = AudioManager.MODE_IN_COMMUNICATION
-        audioManager.isSpeakerphoneOn = false
         isSpeakerOn = false
         
         if (selectedSkin == "android") {
@@ -312,47 +320,34 @@ class FakeCallActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
     }
 
-    private fun finishCall() {
-        ringtone?.stop()
-        tts?.stop()
-        tts?.shutdown()
-        timerHandler.removeCallbacks(timerRunnable)
-        
-        val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
-        audioManager.mode = AudioManager.MODE_NORMAL
-        audioManager.isSpeakerphoneOn = false
-        
-        finish()
-    }
-
-    override fun onInit(status: Int) {
-        if (status == TextToSpeech.SUCCESS) {
-            val result = tts?.setLanguage(Locale.US)
-            isTtsReady = result != TextToSpeech.LANG_MISSING_DATA && result != TextToSpeech.LANG_NOT_SUPPORTED
-            
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                val audioAttributes = AudioAttributes.Builder()
-                    .setUsage(AudioAttributes.USAGE_VOICE_COMMUNICATION)
-                    .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
-                    .build()
-                tts?.setAudioAttributes(audioAttributes)
-            }
-        }
-    }
-
-    override fun onDestroy() {
-        ringtone?.stop()
-        timerHandler.removeCallbacks(timerRunnable)
-        speechRecognizer?.destroy()
-        if (tts != null) {
+        private fun finishCall() {
+            ringtone?.stop()
             tts?.stop()
             tts?.shutdown()
+            timerHandler.removeCallbacks(timerRunnable)
+            
+            finish()
         }
-        
-        val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
-        audioManager.mode = AudioManager.MODE_NORMAL
-        audioManager.isSpeakerphoneOn = false
-        
-        super.onDestroy()
-    }
-}
+        override fun onInit(status: Int) {
+            if (status == TextToSpeech.SUCCESS) {
+                val result = tts?.setLanguage(Locale.US)
+                isTtsReady = result != TextToSpeech.LANG_MISSING_DATA && result != TextToSpeech.LANG_NOT_SUPPORTED
+                
+                // Set default pitch and speech rate to sound a bit more natural
+                tts?.setPitch(1.0f)
+                tts?.setSpeechRate(0.9f)
+            } else {
+                Toast.makeText(this, "TTS Initialization failed", Toast.LENGTH_SHORT).show()
+            }
+        }
+        override fun onDestroy() {
+            ringtone?.stop()
+            timerHandler.removeCallbacks(timerRunnable)
+            speechRecognizer?.destroy()
+            if (tts != null) {
+                tts?.stop()
+                tts?.shutdown()
+            }
+    
+            super.onDestroy()
+        }}
