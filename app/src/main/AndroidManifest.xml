@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@drawable/ic_launcher_legacy"
+        android:label="SHEild"
+        android:roundIcon="@drawable/ic_launcher_legacy"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.FakeCallDistress"
+        tools:targetApi="31">
+        
+        <service android:name=".service.JourneyService" android:foregroundServiceType="location"/>
+        <service android:name=".service.EmergencyRecordService" android:foregroundServiceType="microphone"/>
+        <service android:name=".service.LiveLocationShareService" android:foregroundServiceType="location"/>
+        
+        <receiver android:name=".logic.CallReceiver" android:exported="false"/>
+        <receiver android:name=".logic.BatteryStatusReceiver" android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BATTERY_LOW" />
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name=".ui.SplashActivity"
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ui.auth.LoginActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.MainActivity"
+            android:exported="false" />
+        
+        <activity
+            android:name=".ui.FakeCallActivity"
+            android:exported="false"/>
+            
+    </application>
+
+</manifest>
