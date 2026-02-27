@@ -1,1 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?><resources><style name="SafetyTooltip" parent="Widget.AppCompat.TextView"><item name="android:padding">8dp</item><item name="android:background">#FFEEEEEE</item></style></resources>
