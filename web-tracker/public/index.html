@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHEild Live Rescue Hub</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        :root { --google-blue: #4285F4; --google-red: #EA4335; --google-green: #34A853; }
+        body, html { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', sans-serif; overflow: hidden; background: #111; }
+        #map { height: 100vh; width: 100%; z-index: 1; filter: saturate(1.2); }
+
+        /* Rescue Panel */
+        .rescue-card {
+            position: absolute; top: 16px; left: 16px; z-index: 1000;
+            background: white; width: 320px; border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3); overflow: hidden;
+        }
+        .header { background: var(--google-blue); color: white; padding: 16px; border-bottom: 4px solid #1a73e8; }
+        .content { padding: 16px; }
+        
+        .live-indicator { display: flex; align-items: center; font-size: 11px; font-weight: bold; color: var(--google-green); margin-bottom: 15px; }
+        .dot { height: 10px; width: 10px; background: var(--google-green); border-radius: 50%; margin-right: 8px; animation: blink 1s infinite; }
+        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+
+        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+        .stat-box { background: #f1f3f4; padding: 10px; border-radius: 8px; text-align: center; }
+        .stat-label { font-size: 10px; color: #70757a; display: block; }
+        .stat-val { font-size: 16px; font-weight: bold; color: #202124; }
+
+        .btn-nav {
+            display: block; width: 100%; background: var(--google-blue); color: white; 
+            text-align: center; padding: 14px 0; border-radius: 8px; text-decoration: none; 
+            font-weight: bold; font-size: 14px; transition: transform 0.2s;
+        }
+        .btn-nav:active { transform: scale(0.95); }
+
+        #debug-console { position: absolute; bottom: 10px; right: 10px; z-index: 1000; background: rgba(0,0,0,0.7); color: #0f0; padding: 8px; font-family: monospace; font-size: 10px; border-radius: 4px; pointer-events: none; }
+    </style>
+</head>
+<body>
+
+    <div id="debug-console">System: Initializing Path Engine...</div>
+
+    <div class="rescue-card">
+        <div class="header">
+            <div style="font-size: 18px; font-weight: bold;">🛰️ Live Rescue Signal</div>
+            <div id="last-update" style="font-size: 11px; opacity: 0.8;">Syncing with Satellite...</div>
+        </div>
+        <div class="content">
+            <div class="live-indicator"><div class="dot"></div> LINK ESTABLISHED</div>
+            
+            <div class="stat-grid">
+                <div class="stat-box">
+                    <span class="stat-label">BATTERY</span>
+                    <span class="stat-val" id="battery">--%</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-label">SPEED</span>
+                    <span class="stat-val" id="speed">0 km/h</span>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 15px; text-align: center;">
+                <span class="stat-label">ESTIMATED DISTANCE</span>
+                <span class="stat-val" id="distance" style="font-size: 24px; color: var(--google-blue);">Calculating...</span>
+            </div>
+
+            <a href="#" class="btn-nav" id="navBtn" target="_blank">NAVIGATE TO LOCATION</a>
+        </div>
+    </div>
+
+    <div id="map"></div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+        const log = (m) => document.getElementById('debug-console').innerText = "> " + m;
+
+        const firebaseConfig = {
+            apiKey: "YOUR_GOOGLE_MAPS_API_KEY",
+            authDomain: "sheild-safety.firebaseapp.com",
+            databaseURL: "https://sheild-safety-default-rtdb.firebaseio.com",
+            projectId: "sheild-safety",
+            storageBucket: "sheild-safety.firebasestorage.app",
+            messagingSenderId: "14765012690",
+            appId: "1:14765012690:web:fe3a51017f4a31ec941f0b"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const map = L.map('map', { zoomControl: false }).setView([0, 0], 2);
+        
+        // High-Quality Satellite Layer
+        L.tileLayer('https://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
+            maxZoom: 20, subdomains:['mt0','mt1','mt2','mt3']
+        }).addTo(map);
+
+        const marker = L.circleMarker([0, 0], {
+            radius: 10, fillColor: "#4285F4", color: "#fff", weight: 3, opacity: 1, fillOpacity: 1
+        }).addTo(map);
+
+        // Path (Trail) line
+        const path = L.polyline([], { color: '#4285F4', weight: 5, opacity: 0.6, dashArray: '10, 10' }).addTo(map);
+
+        let rescuerPos = null;
+        navigator.geolocation.getCurrentPosition(p => {
+            rescuerPos = [p.coords.latitude, p.coords.longitude];
+            log("Rescuer GPS Locked");
+        });
+
+        const sid = window.location.hash.replace('#', '');
+        if (!sid) {
+            log("CRITICAL: Missing Session ID in URL");
+        } else {
+            log("Connected to Session: " + sid.substring(0,6));
+            firebase.database().ref('live_sharing/' + sid).on('value', (snap) => {
+                const data = snap.val();
+                if (data) {
+                    const pos = [data.lat, data.lng];
+                    
+                    // Add point to trail
+                    path.addLatLng(pos);
+                    
+                    // Smooth move camera
+                    map.flyTo(pos, 18, { animate: true, duration: 1 });
+                    marker.setLatLng(pos);
+
+                    // Update UI
+                    document.getElementById('battery').innerText = data.battery + "%";
+                    document.getElementById('speed').innerText = data.speed + " km/h";
+                    document.getElementById('last-update').innerText = "Last update: " + new Date(data.time).toLocaleTimeString();
+                    document.getElementById('navBtn').href = `https://www.google.com/maps/dir/?api=1&destination=${data.lat},${data.lng}`;
+
+                    if (rescuerPos) {
+                        const d = map.distance(pos, rescuerPos);
+                        document.getElementById('distance').innerText = d > 1000 ? (d/1000).toFixed(2) + " km" : Math.round(d) + " m";
+                    }
+                    log("Data Received: " + data.lat.toFixed(4) + ", " + data.lng.toFixed(4));
+                } else {
+                    log("Waiting for phone to send GPS...");
+                }
+            });
+        }
+    </script>
+</body>
+</html>
