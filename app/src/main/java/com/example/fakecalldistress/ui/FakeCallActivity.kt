@@ -215,7 +215,18 @@ class FakeCallActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             override fun onRmsChanged(rmsdB: Float) {}
             override fun onBufferReceived(buffer: ByteArray?) {}
             override fun onEndOfSpeech() {}
-            override fun onError(error: Int) { isRecognizing = false }
+            
+            override fun onError(error: Int) { 
+                isRecognizing = false 
+                // Auto-restart listening if there's an error (e.g., no speech detected timeout)
+                if (selectedSkin == "android" && binding.groupAndroidInCall.visibility == View.VISIBLE ||
+                    selectedSkin == "ios" && binding.groupIosInCall.visibility == View.VISIBLE) {
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        startListening()
+                    }, 1000)
+                }
+            }
+            
             override fun onResults(results: Bundle?) {
                 val matches = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
                 if (!matches.isNullOrEmpty()) {
@@ -223,7 +234,19 @@ class FakeCallActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                 }
                 isRecognizing = false
             }
-            override fun onPartialResults(partialResults: Bundle?) {}
+            
+            override fun onPartialResults(partialResults: Bundle?) {
+                val matches = partialResults?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+                if (!matches.isNullOrEmpty()) {
+                    val text = matches[0].lowercase(Locale.getDefault())
+                    if (text.contains("help") || text.contains("emergency") || text.contains("yes") || text.contains("okay")) {
+                        processVoiceInput(matches[0])
+                        speechRecognizer?.cancel()
+                        isRecognizing = false
+                    }
+                }
+            }
+            
             override fun onEvent(eventType: Int, params: Bundle?) {}
         })
     }
@@ -233,6 +256,7 @@ class FakeCallActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
                 putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
                 putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
+                putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
             }
             speechRecognizer?.startListening(intent)
             isRecognizing = true
