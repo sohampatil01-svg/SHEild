@@ -42,9 +42,9 @@
         android:debuggable="true"
         android:extractNativeLibs="false"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@drawable/ic_launcher_legacy"
+        android:icon="@drawable/ic_shield_logo"
         android:label="SHEild"
-        android:roundIcon="@drawable/ic_launcher_legacy"
+        android:roundIcon="@drawable/ic_shield_logo"
         android:supportsRtl="true"
         android:testOnly="true"
         android:theme="@style/Theme.FakeCallDistress" >

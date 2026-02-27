@@ -183,11 +183,11 @@ MERGED from [com.google.android.odml:image:1.0.0-beta1] C:\Users\HP\.gradle\cach
 	android:fullBackupContent
 		ADDED from C:\Users\HP\SHEild\app\src\main\AndroidManifest.xml:22:9-54
 	android:roundIcon
-		ADDED from C:\Users\HP\SHEild\app\src\main\AndroidManifest.xml:25:9-57
+		ADDED from C:\Users\HP\SHEild\app\src\main\AndroidManifest.xml:25:9-53
 	tools:targetApi
 		ADDED from C:\Users\HP\SHEild\app\src\main\AndroidManifest.xml:28:9-29
 	android:icon
-		ADDED from C:\Users\HP\SHEild\app\src\main\AndroidManifest.xml:23:9-52
+		ADDED from C:\Users\HP\SHEild\app\src\main\AndroidManifest.xml:23:9-48
 	android:allowBackup
 		ADDED from C:\Users\HP\SHEild\app\src\main\AndroidManifest.xml:20:9-35
 	android:theme

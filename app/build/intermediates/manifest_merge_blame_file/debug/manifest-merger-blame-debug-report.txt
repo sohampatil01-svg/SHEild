@@ -80,12 +80,12 @@
 43        android:extractNativeLibs="false"
 44        android:fullBackupContent="@xml/backup_rules"
 44-->C:\Users\HP\SHEild\app\src\main\AndroidManifest.xml:22:9-54
-45        android:icon="@drawable/ic_launcher_legacy"
-45-->C:\Users\HP\SHEild\app\src\main\AndroidManifest.xml:23:9-52
+45        android:icon="@drawable/ic_shield_logo"
+45-->C:\Users\HP\SHEild\app\src\main\AndroidManifest.xml:23:9-48
 46        android:label="SHEild"
 46-->C:\Users\HP\SHEild\app\src\main\AndroidManifest.xml:24:9-31
-47        android:roundIcon="@drawable/ic_launcher_legacy"
-47-->C:\Users\HP\SHEild\app\src\main\AndroidManifest.xml:25:9-57
+47        android:roundIcon="@drawable/ic_shield_logo"
+47-->C:\Users\HP\SHEild\app\src\main\AndroidManifest.xml:25:9-53
 48        android:supportsRtl="true"
 48-->C:\Users\HP\SHEild\app\src\main\AndroidManifest.xml:26:9-35
 49        android:testOnly="true"
