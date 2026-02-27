@@ -79,9 +79,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.fakecalldistress.ui.auth.LoginActivity"
-            android:exported="false" />
-        <activity
             android:name="com.example.fakecalldistress.ui.MainActivity"
             android:exported="false" />
         <activity

@@ -49,7 +49,6 @@ id btnCancelSchedule
 id btnClearUnsafeZone
 id btnIosEndCall
 id btnIosSkin
-id btnLogin
 id btnMarkUnsafeZone
 id btnPostIncident
 id btnSaveCaller
@@ -65,7 +64,6 @@ id etContactName
 id etContactNumber
 id etFakeName
 id etIncident
-id etPin
 id etSafeWord
 id fabAndroidAnswer
 id fabAndroidDecline
@@ -111,7 +109,6 @@ id tvLogContent
 id tvLogTimestamp
 id tvSavedContact
 id tvShakeStatus
-id tvTitle
 id tvTrackingLog
 id viewCommunity
 id viewHome
@@ -120,7 +117,6 @@ id viewLineBottom
 id viewLineTop
 id viewSettings
 layout activity_fake_call
-layout activity_login
 layout activity_main
 layout activity_settings
 layout activity_splash
