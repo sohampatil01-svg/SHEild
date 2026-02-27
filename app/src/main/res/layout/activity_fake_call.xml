@@ -81,35 +81,69 @@
             app:layout_constraintBottom_toBottomOf="parent">
 
             <!-- Mute -->
-            <LinearLayout android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical" android:padding="10dp">
-                <ImageView android:layout_width="56dp" android:layout_height="56dp" android:padding="14dp" android:background="@drawable/bg_call_btn" android:src="@android:drawable/ic_lock_silent_mode" app:tint="#FFFFFF"/>
+            <LinearLayout android:id="@+id/btnAndroidMute" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical" android:padding="10dp" android:clickable="true" android:focusable="true">
+                <ImageView android:id="@+id/ivAndroidMute" android:layout_width="56dp" android:layout_height="56dp" android:padding="14dp" android:background="@drawable/bg_call_btn" android:src="@android:drawable/ic_lock_silent_mode" app:tint="#FFFFFF"/>
                 <TextView android:text="mute" android:textColor="#FFFFFF" android:textSize="12sp" android:layout_marginTop="8dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
             </LinearLayout>
             <!-- Keypad -->
-            <LinearLayout android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical" android:padding="10dp">
-                <ImageView android:layout_width="56dp" android:layout_height="56dp" android:padding="14dp" android:background="@drawable/bg_call_btn" android:src="@android:drawable/ic_dialog_dialer" app:tint="#FFFFFF"/>
+            <LinearLayout android:id="@+id/btnAndroidKeypad" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical" android:padding="10dp" android:clickable="true" android:focusable="true">
+                <ImageView android:id="@+id/ivAndroidKeypad" android:layout_width="56dp" android:layout_height="56dp" android:padding="14dp" android:background="@drawable/bg_call_btn" android:src="@android:drawable/ic_dialog_dialer" app:tint="#FFFFFF"/>
                 <TextView android:text="keypad" android:textColor="#FFFFFF" android:textSize="12sp" android:layout_marginTop="8dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
             </LinearLayout>
             <!-- Speaker -->
-            <LinearLayout android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical" android:padding="10dp">
-                <ImageView android:layout_width="56dp" android:layout_height="56dp" android:padding="14dp" android:background="@drawable/bg_call_btn" android:src="@android:drawable/ic_lock_silent_mode_off" app:tint="#FFFFFF"/>
+            <LinearLayout android:id="@+id/btnAndroidSpeaker" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical" android:padding="10dp" android:clickable="true" android:focusable="true">
+                <ImageView android:id="@+id/ivAndroidSpeaker" android:layout_width="56dp" android:layout_height="56dp" android:padding="14dp" android:background="@drawable/bg_call_btn" android:src="@android:drawable/stat_sys_speakerphone" app:tint="#FFFFFF"/>
                 <TextView android:text="speaker" android:textColor="#FFFFFF" android:textSize="12sp" android:layout_marginTop="8dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
             </LinearLayout>
             <!-- Add Call -->
-            <LinearLayout android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical" android:padding="10dp">
-                <ImageView android:layout_width="56dp" android:layout_height="56dp" android:padding="14dp" android:background="@drawable/bg_call_btn" android:src="@android:drawable/ic_menu_add" app:tint="#FFFFFF"/>
+            <LinearLayout android:id="@+id/btnAndroidAddCall" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical" android:padding="10dp" android:clickable="true" android:focusable="true">
+                <ImageView android:id="@+id/ivAndroidAddCall" android:layout_width="56dp" android:layout_height="56dp" android:padding="14dp" android:background="@drawable/bg_call_btn" android:src="@android:drawable/ic_menu_add" app:tint="#FFFFFF"/>
                 <TextView android:text="add call" android:textColor="#FFFFFF" android:textSize="12sp" android:layout_marginTop="8dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
             </LinearLayout>
             <!-- Video Call -->
-            <LinearLayout android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical" android:padding="10dp">
-                <ImageView android:layout_width="56dp" android:layout_height="56dp" android:padding="14dp" android:background="@drawable/bg_call_btn" android:src="@android:drawable/ic_menu_camera" app:tint="#FFFFFF"/>
+            <LinearLayout android:id="@+id/btnAndroidVideo" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical" android:padding="10dp" android:clickable="true" android:focusable="true">
+                <ImageView android:id="@+id/ivAndroidVideo" android:layout_width="56dp" android:layout_height="56dp" android:padding="14dp" android:background="@drawable/bg_call_btn" android:src="@android:drawable/ic_menu_camera" app:tint="#FFFFFF"/>
                 <TextView android:text="video call" android:textColor="#FFFFFF" android:textSize="12sp" android:layout_marginTop="8dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
             </LinearLayout>
             <!-- Contacts -->
-            <LinearLayout android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical" android:padding="10dp">
-                <ImageView android:layout_width="56dp" android:layout_height="56dp" android:padding="14dp" android:background="@drawable/bg_call_btn" android:src="@android:drawable/ic_menu_myplaces" app:tint="#FFFFFF"/>
+            <LinearLayout android:id="@+id/btnAndroidContacts" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical" android:padding="10dp" android:clickable="true" android:focusable="true">
+                <ImageView android:id="@+id/ivAndroidContacts" android:layout_width="56dp" android:layout_height="56dp" android:padding="14dp" android:background="@drawable/bg_call_btn" android:src="@android:drawable/ic_menu_myplaces" app:tint="#FFFFFF"/>
                 <TextView android:text="contacts" android:textColor="#FFFFFF" android:textSize="12sp" android:layout_marginTop="8dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
             </LinearLayout>
+        </GridLayout>
+
+        <!-- ANDROID KEYPAD LAYOUT -->
+        <GridLayout
+            android:id="@+id/layoutAndroidKeypad"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:columnCount="3"
+            android:rowCount="4"
+            android:visibility="gone"
+            android:layout_marginBottom="160dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <!-- Row 1 -->
+            <TextView android:layout_width="80dp" android:layout_height="80dp" android:text="1" android:textSize="32sp" android:textColor="#FFFFFF" android:gravity="center" android:background="?android:attr/selectableItemBackgroundBorderless" android:clickable="true"/>
+            <TextView android:layout_width="80dp" android:layout_height="80dp" android:text="2" android:textSize="32sp" android:textColor="#FFFFFF" android:gravity="center" android:background="?android:attr/selectableItemBackgroundBorderless" android:clickable="true"/>
+            <TextView android:layout_width="80dp" android:layout_height="80dp" android:text="3" android:textSize="32sp" android:textColor="#FFFFFF" android:gravity="center" android:background="?android:attr/selectableItemBackgroundBorderless" android:clickable="true"/>
+            
+            <!-- Row 2 -->
+            <TextView android:layout_width="80dp" android:layout_height="80dp" android:text="4" android:textSize="32sp" android:textColor="#FFFFFF" android:gravity="center" android:background="?android:attr/selectableItemBackgroundBorderless" android:clickable="true"/>
+            <TextView android:layout_width="80dp" android:layout_height="80dp" android:text="5" android:textSize="32sp" android:textColor="#FFFFFF" android:gravity="center" android:background="?android:attr/selectableItemBackgroundBorderless" android:clickable="true"/>
+            <TextView android:layout_width="80dp" android:layout_height="80dp" android:text="6" android:textSize="32sp" android:textColor="#FFFFFF" android:gravity="center" android:background="?android:attr/selectableItemBackgroundBorderless" android:clickable="true"/>
+            
+            <!-- Row 3 -->
+            <TextView android:layout_width="80dp" android:layout_height="80dp" android:text="7" android:textSize="32sp" android:textColor="#FFFFFF" android:gravity="center" android:background="?android:attr/selectableItemBackgroundBorderless" android:clickable="true"/>
+            <TextView android:layout_width="80dp" android:layout_height="80dp" android:text="8" android:textSize="32sp" android:textColor="#FFFFFF" android:gravity="center" android:background="?android:attr/selectableItemBackgroundBorderless" android:clickable="true"/>
+            <TextView android:layout_width="80dp" android:layout_height="80dp" android:text="9" android:textSize="32sp" android:textColor="#FFFFFF" android:gravity="center" android:background="?android:attr/selectableItemBackgroundBorderless" android:clickable="true"/>
+            
+            <!-- Row 4 -->
+            <TextView android:layout_width="80dp" android:layout_height="80dp" android:text="*" android:textSize="32sp" android:textColor="#FFFFFF" android:gravity="center" android:background="?android:attr/selectableItemBackgroundBorderless" android:clickable="true"/>
+            <TextView android:layout_width="80dp" android:layout_height="80dp" android:text="0" android:textSize="32sp" android:textColor="#FFFFFF" android:gravity="center" android:background="?android:attr/selectableItemBackgroundBorderless" android:clickable="true"/>
+            <TextView android:layout_width="80dp" android:layout_height="80dp" android:text="#" android:textSize="32sp" android:textColor="#FFFFFF" android:gravity="center" android:background="?android:attr/selectableItemBackgroundBorderless" android:clickable="true"/>
         </GridLayout>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -122,6 +156,19 @@
             app:srcCompat="@android:drawable/ic_menu_call"
             app:tint="#FFFFFF"
             android:rotation="135"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+            
+        <TextView
+            android:id="@+id/btnAndroidHideKeypad"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hide"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:visibility="gone"
+            android:layout_marginBottom="30dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
@@ -202,30 +249,64 @@
             android:layout_marginBottom="200dp"
             app:layout_constraintBottom_toBottomOf="parent">
 
-            <LinearLayout android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical" android:padding="12dp">
-                <ImageView android:layout_width="64dp" android:layout_height="64dp" android:padding="18dp" android:background="@drawable/bg_call_btn" android:src="@android:drawable/ic_lock_silent_mode" app:tint="#FFFFFF"/>
+            <LinearLayout android:id="@+id/btnIosMute" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical" android:padding="12dp" android:clickable="true" android:focusable="true">
+                <ImageView android:id="@+id/ivIosMute" android:layout_width="64dp" android:layout_height="64dp" android:padding="18dp" android:background="@drawable/bg_call_btn" android:src="@android:drawable/ic_lock_silent_mode" app:tint="#FFFFFF"/>
                 <TextView android:text="mute" android:textColor="#FFFFFF" android:textSize="13sp" android:layout_marginTop="6dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
             </LinearLayout>
-            <LinearLayout android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical" android:padding="12dp">
-                <ImageView android:layout_width="64dp" android:layout_height="64dp" android:padding="18dp" android:background="@drawable/bg_call_btn" android:src="@android:drawable/ic_dialog_dialer" app:tint="#FFFFFF"/>
+            <LinearLayout android:id="@+id/btnIosKeypad" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical" android:padding="12dp" android:clickable="true" android:focusable="true">
+                <ImageView android:id="@+id/ivIosKeypad" android:layout_width="64dp" android:layout_height="64dp" android:padding="18dp" android:background="@drawable/bg_call_btn" android:src="@android:drawable/ic_dialog_dialer" app:tint="#FFFFFF"/>
                 <TextView android:text="keypad" android:textColor="#FFFFFF" android:textSize="13sp" android:layout_marginTop="6dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
             </LinearLayout>
-            <LinearLayout android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical" android:padding="12dp">
-                <ImageView android:layout_width="64dp" android:layout_height="64dp" android:padding="18dp" android:background="@drawable/bg_call_btn" android:src="@android:drawable/ic_lock_silent_mode_off" app:tint="#FFFFFF"/>
+            <LinearLayout android:id="@+id/btnIosSpeaker" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical" android:padding="12dp" android:clickable="true" android:focusable="true">
+                <ImageView android:id="@+id/ivIosSpeaker" android:layout_width="64dp" android:layout_height="64dp" android:padding="18dp" android:background="@drawable/bg_call_btn" android:src="@android:drawable/stat_sys_speakerphone" app:tint="#FFFFFF"/>
                 <TextView android:text="speaker" android:textColor="#FFFFFF" android:textSize="13sp" android:layout_marginTop="6dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
             </LinearLayout>
-            <LinearLayout android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical" android:padding="12dp">
-                <ImageView android:layout_width="64dp" android:layout_height="64dp" android:padding="18dp" android:background="@drawable/bg_call_btn" android:src="@android:drawable/ic_menu_add" app:tint="#FFFFFF"/>
+            <LinearLayout android:id="@+id/btnIosAddCall" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical" android:padding="12dp" android:clickable="true" android:focusable="true">
+                <ImageView android:id="@+id/ivIosAddCall" android:layout_width="64dp" android:layout_height="64dp" android:padding="18dp" android:background="@drawable/bg_call_btn" android:src="@android:drawable/ic_menu_add" app:tint="#FFFFFF"/>
                 <TextView android:text="add call" android:textColor="#FFFFFF" android:textSize="13sp" android:layout_marginTop="6dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
             </LinearLayout>
-            <LinearLayout android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical" android:padding="12dp">
-                <ImageView android:layout_width="64dp" android:layout_height="64dp" android:padding="18dp" android:background="@drawable/bg_call_btn" android:src="@android:drawable/ic_menu_camera" app:tint="#FFFFFF"/>
+            <LinearLayout android:id="@+id/btnIosVideo" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical" android:padding="12dp" android:clickable="true" android:focusable="true">
+                <ImageView android:id="@+id/ivIosVideo" android:layout_width="64dp" android:layout_height="64dp" android:padding="18dp" android:background="@drawable/bg_call_btn" android:src="@android:drawable/ic_menu_camera" app:tint="#FFFFFF"/>
                 <TextView android:text="FaceTime" android:textColor="#FFFFFF" android:textSize="13sp" android:layout_marginTop="6dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
             </LinearLayout>
-            <LinearLayout android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical" android:padding="12dp">
-                <ImageView android:layout_width="64dp" android:layout_height="64dp" android:padding="18dp" android:background="@drawable/bg_call_btn" android:src="@android:drawable/ic_menu_myplaces" app:tint="#FFFFFF"/>
+            <LinearLayout android:id="@+id/btnIosContacts" android:layout_columnWeight="1" android:gravity="center" android:orientation="vertical" android:padding="12dp" android:clickable="true" android:focusable="true">
+                <ImageView android:id="@+id/ivIosContacts" android:layout_width="64dp" android:layout_height="64dp" android:padding="18dp" android:background="@drawable/bg_call_btn" android:src="@android:drawable/ic_menu_myplaces" app:tint="#FFFFFF"/>
                 <TextView android:text="contacts" android:textColor="#FFFFFF" android:textSize="13sp" android:layout_marginTop="6dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
             </LinearLayout>
+        </GridLayout>
+
+        <!-- IOS KEYPAD LAYOUT -->
+        <GridLayout
+            android:id="@+id/layoutIosKeypad"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:columnCount="3"
+            android:rowCount="4"
+            android:visibility="gone"
+            android:layout_marginBottom="160dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <!-- Row 1 -->
+            <TextView android:layout_width="80dp" android:layout_height="80dp" android:layout_margin="10dp" android:text="1" android:textSize="32sp" android:textColor="#000000" android:gravity="center" android:background="@drawable/bg_call_btn" android:backgroundTint="#FFFFFF" android:clickable="true"/>
+            <TextView android:layout_width="80dp" android:layout_height="80dp" android:layout_margin="10dp" android:text="2" android:textSize="32sp" android:textColor="#000000" android:gravity="center" android:background="@drawable/bg_call_btn" android:backgroundTint="#FFFFFF" android:clickable="true"/>
+            <TextView android:layout_width="80dp" android:layout_height="80dp" android:layout_margin="10dp" android:text="3" android:textSize="32sp" android:textColor="#000000" android:gravity="center" android:background="@drawable/bg_call_btn" android:backgroundTint="#FFFFFF" android:clickable="true"/>
+            
+            <!-- Row 2 -->
+            <TextView android:layout_width="80dp" android:layout_height="80dp" android:layout_margin="10dp" android:text="4" android:textSize="32sp" android:textColor="#000000" android:gravity="center" android:background="@drawable/bg_call_btn" android:backgroundTint="#FFFFFF" android:clickable="true"/>
+            <TextView android:layout_width="80dp" android:layout_height="80dp" android:layout_margin="10dp" android:text="5" android:textSize="32sp" android:textColor="#000000" android:gravity="center" android:background="@drawable/bg_call_btn" android:backgroundTint="#FFFFFF" android:clickable="true"/>
+            <TextView android:layout_width="80dp" android:layout_height="80dp" android:layout_margin="10dp" android:text="6" android:textSize="32sp" android:textColor="#000000" android:gravity="center" android:background="@drawable/bg_call_btn" android:backgroundTint="#FFFFFF" android:clickable="true"/>
+            
+            <!-- Row 3 -->
+            <TextView android:layout_width="80dp" android:layout_height="80dp" android:layout_margin="10dp" android:text="7" android:textSize="32sp" android:textColor="#000000" android:gravity="center" android:background="@drawable/bg_call_btn" android:backgroundTint="#FFFFFF" android:clickable="true"/>
+            <TextView android:layout_width="80dp" android:layout_height="80dp" android:layout_margin="10dp" android:text="8" android:textSize="32sp" android:textColor="#000000" android:gravity="center" android:background="@drawable/bg_call_btn" android:backgroundTint="#FFFFFF" android:clickable="true"/>
+            <TextView android:layout_width="80dp" android:layout_height="80dp" android:layout_margin="10dp" android:text="9" android:textSize="32sp" android:textColor="#000000" android:gravity="center" android:background="@drawable/bg_call_btn" android:backgroundTint="#FFFFFF" android:clickable="true"/>
+            
+            <!-- Row 4 -->
+            <TextView android:layout_width="80dp" android:layout_height="80dp" android:layout_margin="10dp" android:text="*" android:textSize="32sp" android:textColor="#000000" android:gravity="center" android:background="@drawable/bg_call_btn" android:backgroundTint="#FFFFFF" android:clickable="true"/>
+            <TextView android:layout_width="80dp" android:layout_height="80dp" android:layout_margin="10dp" android:text="0" android:textSize="32sp" android:textColor="#000000" android:gravity="center" android:background="@drawable/bg_call_btn" android:backgroundTint="#FFFFFF" android:clickable="true"/>
+            <TextView android:layout_width="80dp" android:layout_height="80dp" android:layout_margin="10dp" android:text="#" android:textSize="32sp" android:textColor="#000000" android:gravity="center" android:background="@drawable/bg_call_btn" android:backgroundTint="#FFFFFF" android:clickable="true"/>
         </GridLayout>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -243,6 +324,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:elevation="0dp"/>
+            
+        <TextView
+            android:id="@+id/btnIosHideKeypad"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hide"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:visibility="gone"
+            android:layout_marginBottom="30dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

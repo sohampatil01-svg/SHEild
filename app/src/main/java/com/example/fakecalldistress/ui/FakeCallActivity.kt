@@ -1,8 +1,11 @@
 package com.example.fakecalldistress.ui
 
 import android.media.Ringtone
+import android.media.AudioManager
+import android.media.AudioAttributes
 import android.media.RingtoneManager
 import android.os.Bundle
+import android.os.Build
 import android.os.CountDownTimer
 import android.os.Handler
 import android.os.Looper
@@ -10,6 +13,7 @@ import android.speech.tts.TextToSpeech
 import android.speech.SpeechRecognizer
 import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
+import android.content.Context
 import android.content.Intent
 import android.view.View
 import android.widget.Toast
@@ -33,6 +37,10 @@ class FakeCallActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var isRecognizing = false
     
     private var selectedSkin = "android" // default
+    
+    // Call UI State
+    private var isMuted = false
+    private var isSpeakerOn = false
     
     // Timer to track call duration visually
     private var callSeconds = 0
@@ -90,6 +98,67 @@ class FakeCallActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         binding.fabIosAnswer.setOnClickListener { handleAnswer() }
         binding.fabIosDecline.setOnClickListener { handleDecline() }
         binding.btnIosEndCall.setOnClickListener { handleDecline() }
+        
+        setupGridActions()
+    }
+
+    private fun setupGridActions() {
+        // Android Grid
+        binding.btnAndroidMute.setOnClickListener { toggleMute() }
+        binding.btnAndroidKeypad.setOnClickListener { toggleKeypad() }
+        binding.btnAndroidSpeaker.setOnClickListener { toggleSpeaker() }
+        binding.btnAndroidAddCall.setOnClickListener { showMockAction("Add call dialog") }
+        binding.btnAndroidVideo.setOnClickListener { showMockAction("Switching to video...") }
+        binding.btnAndroidContacts.setOnClickListener { showMockAction("Opening contacts...") }
+        binding.btnAndroidHideKeypad.setOnClickListener { toggleKeypad() }
+
+        // iOS Grid
+        binding.btnIosMute.setOnClickListener { toggleMute() }
+        binding.btnIosKeypad.setOnClickListener { toggleKeypad() }
+        binding.btnIosSpeaker.setOnClickListener { toggleSpeaker() }
+        binding.btnIosAddCall.setOnClickListener { showMockAction("Add call dialog") }
+        binding.btnIosVideo.setOnClickListener { showMockAction("Switching to FaceTime...") }
+        binding.btnIosContacts.setOnClickListener { showMockAction("Opening contacts...") }
+        binding.btnIosHideKeypad.setOnClickListener { toggleKeypad() }
+    }
+
+    private var isKeypadOpen = false
+
+    private fun toggleKeypad() {
+        isKeypadOpen = !isKeypadOpen
+        if (selectedSkin == "android") {
+            binding.groupAndroidInCall.visibility = if (isKeypadOpen) View.GONE else View.VISIBLE
+            binding.layoutAndroidKeypad.visibility = if (isKeypadOpen) View.VISIBLE else View.GONE
+            binding.btnAndroidHideKeypad.visibility = if (isKeypadOpen) View.VISIBLE else View.GONE
+        } else {
+            binding.groupIosInCall.visibility = if (isKeypadOpen) View.GONE else View.VISIBLE
+            binding.layoutIosKeypad.visibility = if (isKeypadOpen) View.VISIBLE else View.GONE
+            binding.btnIosHideKeypad.visibility = if (isKeypadOpen) View.VISIBLE else View.GONE
+        }
+    }
+
+    private fun toggleMute() {
+        isMuted = !isMuted
+        val color = if (isMuted) android.graphics.Color.parseColor("#4CAF50") else android.graphics.Color.parseColor("#FFFFFF")
+        binding.ivAndroidMute.setColorFilter(color)
+        binding.ivIosMute.setColorFilter(color)
+        Toast.makeText(this, if (isMuted) "Microphone muted" else "Microphone unmuted", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun toggleSpeaker() {
+        isSpeakerOn = !isSpeakerOn
+        val color = if (isSpeakerOn) android.graphics.Color.parseColor("#4CAF50") else android.graphics.Color.parseColor("#FFFFFF")
+        binding.ivAndroidSpeaker.setColorFilter(color)
+        binding.ivIosSpeaker.setColorFilter(color)
+        
+        val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        audioManager.isSpeakerphoneOn = isSpeakerOn
+        
+        Toast.makeText(this, if (isSpeakerOn) "Speaker turned ON" else "Speaker turned OFF", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun showMockAction(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
     private fun setupSkin(skin: String) {
@@ -185,6 +254,11 @@ class FakeCallActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private fun answerCall() {
         ringtone?.stop()
         
+        val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        audioManager.mode = AudioManager.MODE_IN_COMMUNICATION
+        audioManager.isSpeakerphoneOn = false
+        isSpeakerOn = false
+        
         if (selectedSkin == "android") {
             binding.groupAndroidIncoming.visibility = View.GONE
             binding.groupAndroidInCall.visibility = View.VISIBLE
@@ -219,6 +293,11 @@ class FakeCallActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         tts?.stop()
         tts?.shutdown()
         timerHandler.removeCallbacks(timerRunnable)
+        
+        val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        audioManager.mode = AudioManager.MODE_NORMAL
+        audioManager.isSpeakerphoneOn = false
+        
         finish()
     }
 
@@ -226,6 +305,14 @@ class FakeCallActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         if (status == TextToSpeech.SUCCESS) {
             val result = tts?.setLanguage(Locale.US)
             isTtsReady = result != TextToSpeech.LANG_MISSING_DATA && result != TextToSpeech.LANG_NOT_SUPPORTED
+            
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                val audioAttributes = AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_VOICE_COMMUNICATION)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
+                    .build()
+                tts?.setAudioAttributes(audioAttributes)
+            }
         }
     }
 
@@ -237,6 +324,11 @@ class FakeCallActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             tts?.stop()
             tts?.shutdown()
         }
+        
+        val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        audioManager.mode = AudioManager.MODE_NORMAL
+        audioManager.isSpeakerphoneOn = false
+        
         super.onDestroy()
     }
 }
