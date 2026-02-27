@@ -1,6 +1,0 @@
-com.example.fakecalldistress.test.app-jetified-annotation-experimental-1.3.0-0 C:\Users\HP\.gradle\caches\9.0-milestone-1\transforms\2f1e52a4cee2dbbf875ae0e95b5bb8f7\transformed\jetified-annotation-experimental-1.3.0\res
-com.example.fakecalldistress.test.app-jetified-core-1.5.0-1 C:\Users\HP\.gradle\caches\9.0-milestone-1\transforms\d467b3ba66c563f082c95968bcb61287\transformed\jetified-core-1.5.0\res
-com.example.fakecalldistress.test.app-androidTest-2 C:\Users\HP\FakeCallDistressApp\app\build\generated\res\resValues\androidTest\debug
-com.example.fakecalldistress.test.app-mergeDebugAndroidTestResources-3 C:\Users\HP\FakeCallDistressApp\app\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\merged.dir
-com.example.fakecalldistress.test.app-mergeDebugAndroidTestResources-4 C:\Users\HP\FakeCallDistressApp\app\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\stripped.dir
-com.example.fakecalldistress.test.app-merged_res-5 C:\Users\HP\FakeCallDistressApp\app\build\intermediates\merged_res\debugAndroidTest

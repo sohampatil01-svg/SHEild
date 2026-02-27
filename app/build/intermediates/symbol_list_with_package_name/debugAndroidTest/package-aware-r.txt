@@ -1,3 +1,0 @@
-com.example.fakecalldistress.test
-style WhiteBackgroundDialogTheme
-style WhiteBackgroundTheme

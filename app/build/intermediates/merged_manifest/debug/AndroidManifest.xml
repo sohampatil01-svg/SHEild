@@ -42,11 +42,10 @@
         android:debuggable="true"
         android:extractNativeLibs="false"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@drawable/ic_shield_logo"
+        android:icon="@drawable/ic_launcher_legacy"
         android:label="SHEild"
-        android:roundIcon="@drawable/ic_shield_logo"
+        android:roundIcon="@drawable/ic_launcher_legacy"
         android:supportsRtl="true"
-        android:testOnly="true"
         android:theme="@style/Theme.FakeCallDistress" >
         <service
             android:name="com.example.fakecalldistress.service.JourneyService"
