@@ -1,47 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">@color/text_dark</color>
-    <color name="divider_color">#CAC4D0</color>
-    <color name="ios_bg_dark">#121212</color>
-    <color name="ios_btn_bg">#40FFFFFF</color>
-    <color name="ios_green_answer">#34C759</color>
-    <color name="ios_red_decline">#FF3B30</color>
-    <color name="ios_text_secondary">#8E8E93</color>
-    <color name="m3_crimson_on_sos">#FFFFFF</color>
-    <color name="m3_crimson_sos">#D32F2F</color>
-    <color name="m3_navy_container">#E8EAF6</color>
-    <color name="m3_navy_on_primary">#FFFFFF</color>
-    <color name="m3_navy_primary">#1A237E</color>
-    <color name="m3_on_surface_variant">#44474E</color>
-    <color name="m3_status_green">#2E7D32</color>
-    <color name="m3_status_green_light">#E8F5E9</color>
-    <color name="m3_surface_variant">#F8F9FA</color>
-    <color name="purple_200">@color/sheild_blue_primary</color>
-    <color name="purple_500">@color/sheild_blue_primary</color>
-    <color name="purple_700">@color/sheild_blue_dark</color>
-    <color name="sheild_background">@color/m3_surface_variant</color>
-    <color name="sheild_blue_dark">@color/m3_navy_primary</color>
-    <color name="sheild_blue_primary">@color/m3_navy_primary</color>
-    <color name="sheild_red_alert">@color/m3_crimson_sos</color>
-    <color name="sheild_red_danger">@color/m3_crimson_sos</color>
-    <color name="teal_200">@color/sheild_blue_primary</color>
-    <color name="teal_700">@color/sheild_blue_dark</color>
-    <color name="text_dark">#212121</color>
-    <color name="text_grey">#757575</color>
-    <color name="white">#FFFFFF</color>
-    <string name="app_name">SHEild</string>
-    <string name="tagline">Stay Safe, Stay Connected</string>
-    <style name="Theme.FakeCallDistress" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        
-        <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
-        <item name="colorOnPrimary">@color/white</item>
-        
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_700</item>
-        <item name="colorOnSecondary">@color/black</item>
-        
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
-        
+    <style name="Widget.SHEild.Button.SOS" parent="Widget.MaterialComponents.Button">
+        <item name="android:backgroundTint">@color/red_600</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.SHEild.Button.Circle</item>
     </style>
 </resources>
