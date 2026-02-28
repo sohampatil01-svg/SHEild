@@ -30,8 +30,8 @@ class FakeCallActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     companion object {
         private const val TAG = "FakeCallActivity"
-        private const val LISTEN_RESTART_DELAY = 1500L
-        private const val MIN_SPEECH_INTERVAL = 2000L
+        private const val LISTEN_RESTART_DELAY = 3000L // Increased delay
+        private const val MIN_SPEECH_INTERVAL = 3000L  // Increased interval
     }
 
     private lateinit var binding: ActivityFakeCallBinding
@@ -46,14 +46,16 @@ class FakeCallActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private lateinit var safetySettingsRepository: SafetySettingsRepository
     private lateinit var audioManager: AudioManager
     
-    // Speech Recognition State
+    // Speech Recognition State - Use atomic/volatile for thread safety
     private var speechRecognizer: SpeechRecognizer? = null
-    private var isListeningEnabled = false
-    private var isCurrentlyListening = false
-    private var isTtsSpeaking = false
+    @Volatile private var isListeningEnabled = false
+    @Volatile private var isCurrentlyListening = false
+    @Volatile private var isTtsSpeaking = false
+    @Volatile private var isProcessingResult = false
     private var lastProcessedTime = 0L
     private var recognitionRetryCount = 0
-    private val maxRetries = 3
+    private val maxRetries = 2
+    private val recognizerLock = Object()
     
     // SOS Trigger Word
     private var sosTriggerWord: String = ""
@@ -64,9 +66,13 @@ class FakeCallActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var isMuted = false
     private var isSpeakerOn = false
     
+    // Separate handlers for different tasks
+    private val timerHandler = Handler(Looper.getMainLooper())
+    private val speechHandler = Handler(Looper.getMainLooper())
+    private val uiHandler = Handler(Looper.getMainLooper())
+    
     // Timer to track call duration visually
     private var callSeconds = 0
-    private val mainHandler = Handler(Looper.getMainLooper())
     private val timerRunnable = object : Runnable {
         override fun run() {
             if (!isCallActive) return
@@ -76,7 +82,7 @@ class FakeCallActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             val timeStr = String.format("%02d:%02d", minutes, seconds)
             if (selectedSkin == "android") binding.tvAndroidStatus.text = timeStr
             else binding.tvIosStatus.text = timeStr
-            mainHandler.postDelayed(this, 1000)
+            timerHandler.postDelayed(this, 1000)
         }
     }
 
@@ -245,259 +251,279 @@ class FakeCallActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     }
 
     private fun createSpeechRecognizer() {
-        // Destroy existing recognizer first
-        destroySpeechRecognizer()
-        
-        if (!SpeechRecognizer.isRecognitionAvailable(this)) {
-            Log.e(TAG, "Speech recognition not available")
-            Toast.makeText(this, "Voice recognition unavailable", Toast.LENGTH_SHORT).show()
-            return
-        }
-        
-        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this)
-        speechRecognizer?.setRecognitionListener(object : RecognitionListener {
-            override fun onReadyForSpeech(params: Bundle?) {
-                Log.d(TAG, "Ready for speech")
-                isCurrentlyListening = true
-                recognitionRetryCount = 0
-                updateStatusText("Listening...")
+        synchronized(recognizerLock) {
+            // Destroy existing recognizer first
+            destroySpeechRecognizerInternal()
+            
+            if (!SpeechRecognizer.isRecognitionAvailable(this)) {
+                Log.e(TAG, "Speech recognition not available")
+                return
             }
             
-            override fun onBeginningOfSpeech() {
-                Log.d(TAG, "Speech started")
-            }
-            
-            override fun onRmsChanged(rmsdB: Float) {}
-            override fun onBufferReceived(buffer: ByteArray?) {}
-            
-            override fun onEndOfSpeech() {
-                Log.d(TAG, "Speech ended")
-                isCurrentlyListening = false
-            }
-
-            override fun onError(error: Int) {
-                isCurrentlyListening = false
-                val errorMsg = getErrorText(error)
-                Log.e(TAG, "Recognition error: $errorMsg")
+            speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this)
+            speechRecognizer?.setRecognitionListener(object : RecognitionListener {
+                override fun onReadyForSpeech(params: Bundle?) {
+                    Log.d(TAG, "Ready for speech")
+                    isCurrentlyListening = true
+                    recognitionRetryCount = 0
+                    uiHandler.post { updateStatusText("Listening...") }
+                }
                 
-                // Only retry on recoverable errors
-                when (error) {
-                    SpeechRecognizer.ERROR_NO_MATCH,
-                    SpeechRecognizer.ERROR_SPEECH_TIMEOUT -> {
-                        // No speech detected, restart listening after delay
-                        scheduleRestartListening()
+                override fun onBeginningOfSpeech() {
+                    Log.d(TAG, "Speech started")
+                }
+                
+                override fun onRmsChanged(rmsdB: Float) {}
+                override fun onBufferReceived(buffer: ByteArray?) {}
+                
+                override fun onEndOfSpeech() {
+                    Log.d(TAG, "Speech ended")
+                    isCurrentlyListening = false
+                }
+
+                override fun onError(error: Int) {
+                    isCurrentlyListening = false
+                    val errorMsg = getErrorText(error)
+                    Log.e(TAG, "Recognition error: $errorMsg")
+                    
+                    if (!isCallActive || !isListeningEnabled || isTtsSpeaking) {
+                        return
                     }
-                    SpeechRecognizer.ERROR_RECOGNIZER_BUSY -> {
-                        // Recognizer busy, recreate and restart
-                        mainHandler.postDelayed({
-                            if (isListeningEnabled && isCallActive) {
-                                createSpeechRecognizer()
+                    
+                    // Only retry on specific errors with limited retries
+                    when (error) {
+                        SpeechRecognizer.ERROR_NO_MATCH,
+                        SpeechRecognizer.ERROR_SPEECH_TIMEOUT -> {
+                            if (recognitionRetryCount < maxRetries) {
+                                recognitionRetryCount++
                                 scheduleRestartListening()
                             }
-                        }, 1000)
+                        }
+                        SpeechRecognizer.ERROR_RECOGNIZER_BUSY,
+                        SpeechRecognizer.ERROR_CLIENT -> {
+                            // Need to recreate recognizer
+                            if (recognitionRetryCount < maxRetries) {
+                                recognitionRetryCount++
+                                speechHandler.postDelayed({
+                                    if (isListeningEnabled && isCallActive && !isTtsSpeaking) {
+                                        createSpeechRecognizer()
+                                        startVoiceListeningInternal()
+                                    }
+                                }, LISTEN_RESTART_DELAY)
+                            }
+                        }
+                        // Don't retry other errors
                     }
-                    SpeechRecognizer.ERROR_CLIENT -> {
-                        // Client error, recreate recognizer
-                        if (recognitionRetryCount < maxRetries) {
-                            recognitionRetryCount++
-                            mainHandler.postDelayed({
-                                if (isListeningEnabled && isCallActive) {
-                                    createSpeechRecognizer()
-                                    scheduleRestartListening()
-                                }
-                            }, 1500)
+                }
+
+                override fun onResults(results: Bundle?) {
+                    isCurrentlyListening = false
+                    
+                    if (isProcessingResult || !isCallActive) return
+                    isProcessingResult = true
+                    
+                    val matches = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+                    Log.d(TAG, "Results: $matches")
+                    
+                    if (!matches.isNullOrEmpty()) {
+                        val bestMatch = matches[0]
+                        if (bestMatch.isNotBlank()) {
+                            handleSpeechResult(bestMatch)
                         }
                     }
-                    else -> {
-                        // Other errors, try to restart
+                    
+                    isProcessingResult = false
+                    
+                    // Schedule restart only if still active
+                    if (isCallActive && isListeningEnabled && !isTtsSpeaking) {
                         scheduleRestartListening()
                     }
                 }
-            }
 
-            override fun onResults(results: Bundle?) {
-                isCurrentlyListening = false
-                val matches = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-                Log.d(TAG, "Results: $matches")
-                
-                if (!matches.isNullOrEmpty()) {
-                    val bestMatch = matches[0]
-                    if (bestMatch.isNotBlank()) {
-                        handleSpeechResult(bestMatch)
-                    }
+                override fun onPartialResults(partialResults: Bundle?) {
+                    // Disabled - only use final results
                 }
-                
-                // Schedule restart after processing
-                scheduleRestartListening()
-            }
 
-            override fun onPartialResults(partialResults: Bundle?) {
-                // Don't process partial results to avoid false triggers
-                // We wait for final results for accuracy
-            }
-
-            override fun onEvent(eventType: Int, params: Bundle?) {}
-        })
-        
-        Log.d(TAG, "Speech recognizer created")
+                override fun onEvent(eventType: Int, params: Bundle?) {}
+            })
+            
+            Log.d(TAG, "Speech recognizer created")
+        }
     }
     
     private fun getErrorText(errorCode: Int): String {
         return when (errorCode) {
-            SpeechRecognizer.ERROR_AUDIO -> "Audio recording error"
-            SpeechRecognizer.ERROR_CLIENT -> "Client side error"
-            SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS -> "Insufficient permissions"
+            SpeechRecognizer.ERROR_AUDIO -> "Audio error"
+            SpeechRecognizer.ERROR_CLIENT -> "Client error"
+            SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS -> "No permission"
             SpeechRecognizer.ERROR_NETWORK -> "Network error"
             SpeechRecognizer.ERROR_NETWORK_TIMEOUT -> "Network timeout"
-            SpeechRecognizer.ERROR_NO_MATCH -> "No match found"
-            SpeechRecognizer.ERROR_RECOGNIZER_BUSY -> "Recognizer busy"
+            SpeechRecognizer.ERROR_NO_MATCH -> "No match"
+            SpeechRecognizer.ERROR_RECOGNIZER_BUSY -> "Busy"
             SpeechRecognizer.ERROR_SERVER -> "Server error"
-            SpeechRecognizer.ERROR_SPEECH_TIMEOUT -> "No speech input"
-            else -> "Unknown error $errorCode"
+            SpeechRecognizer.ERROR_SPEECH_TIMEOUT -> "No speech"
+            else -> "Error $errorCode"
         }
     }
     
-    private fun destroySpeechRecognizer() {
+    private fun destroySpeechRecognizerInternal() {
         try {
             speechRecognizer?.stopListening()
             speechRecognizer?.cancel()
             speechRecognizer?.destroy()
         } catch (e: Exception) {
-            Log.e(TAG, "Error destroying speech recognizer", e)
+            Log.e(TAG, "Error destroying recognizer", e)
         }
         speechRecognizer = null
         isCurrentlyListening = false
     }
     
+    private fun destroySpeechRecognizer() {
+        synchronized(recognizerLock) {
+            destroySpeechRecognizerInternal()
+        }
+    }
+    
     private fun scheduleRestartListening() {
         if (!isListeningEnabled || !isCallActive || isTtsSpeaking) {
-            Log.d(TAG, "Not scheduling restart: enabled=$isListeningEnabled, active=$isCallActive, speaking=$isTtsSpeaking")
+            Log.d(TAG, "Not scheduling: enabled=$isListeningEnabled, active=$isCallActive, speaking=$isTtsSpeaking")
             return
         }
         
-        mainHandler.removeCallbacksAndMessages(null)
-        mainHandler.postDelayed({
-            if (isListeningEnabled && isCallActive && !isTtsSpeaking) {
-                startVoiceListening()
+        // Clear any existing speech callbacks
+        speechHandler.removeCallbacksAndMessages(null)
+        
+        speechHandler.postDelayed({
+            if (isListeningEnabled && isCallActive && !isTtsSpeaking && !isCurrentlyListening) {
+                startVoiceListeningInternal()
             }
         }, LISTEN_RESTART_DELAY)
     }
     
-    private fun startVoiceListening() {
-        if (!isListeningEnabled || !isCallActive || isTtsSpeaking) {
-            Log.d(TAG, "Cannot start listening: enabled=$isListeningEnabled, active=$isCallActive, speaking=$isTtsSpeaking")
-            return
-        }
-        
-        if (isCurrentlyListening) {
-            Log.d(TAG, "Already listening, skipping")
-            return
-        }
-        
-        if (speechRecognizer == null) {
-            createSpeechRecognizer()
-        }
-        
-        try {
-            val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
-                putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
-                putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
-                putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 3)
-                putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, false) // Disable partial for stability
-                putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS, 2000)
-                putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS, 1500)
-                putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_MINIMUM_LENGTH_MILLIS, 500)
+    private fun startVoiceListeningInternal() {
+        synchronized(recognizerLock) {
+            if (!isListeningEnabled || !isCallActive || isTtsSpeaking || isCurrentlyListening) {
+                return
             }
             
-            speechRecognizer?.startListening(intent)
-            Log.d(TAG, "Started listening")
+            if (speechRecognizer == null) {
+                createSpeechRecognizer()
+            }
             
-        } catch (e: Exception) {
-            Log.e(TAG, "Error starting recognition", e)
-            isCurrentlyListening = false
-            scheduleRestartListening()
+            try {
+                val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
+                    putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+                    putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
+                    putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 3)
+                    putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, false)
+                    putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS, 3000)
+                    putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS, 2500)
+                    putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_MINIMUM_LENGTH_MILLIS, 1000)
+                }
+                
+                speechRecognizer?.startListening(intent)
+                Log.d(TAG, "Started listening")
+                
+            } catch (e: Exception) {
+                Log.e(TAG, "Error starting recognition", e)
+                isCurrentlyListening = false
+            }
         }
+    }
+    
+    private fun startVoiceListening() {
+        if (!isListeningEnabled || !isCallActive || isTtsSpeaking) {
+            return
+        }
+        startVoiceListeningInternal()
     }
     
     private fun stopVoiceListening() {
         isListeningEnabled = false
-        mainHandler.removeCallbacksAndMessages(null)
+        speechHandler.removeCallbacksAndMessages(null)
         
-        try {
-            speechRecognizer?.stopListening()
-            speechRecognizer?.cancel()
-        } catch (e: Exception) {
-            Log.e(TAG, "Error stopping recognition", e)
+        synchronized(recognizerLock) {
+            try {
+                speechRecognizer?.stopListening()
+                speechRecognizer?.cancel()
+            } catch (e: Exception) { }
+            isCurrentlyListening = false
         }
-        isCurrentlyListening = false
     }
     
     private fun updateStatusText(text: String) {
-        runOnUiThread {
-            if (selectedSkin == "android") {
-                binding.tvAndroidStatus.text = text
-            } else {
-                binding.tvIosStatus.text = text
-            }
+        if (selectedSkin == "android") {
+            binding.tvAndroidStatus.text = text
+        } else {
+            binding.tvIosStatus.text = text
         }
     }
     
     private fun handleSpeechResult(text: String) {
-        // Debounce to prevent processing same speech multiple times
+        // Debounce
         val now = System.currentTimeMillis()
         if (now - lastProcessedTime < MIN_SPEECH_INTERVAL) {
-            Log.d(TAG, "Ignoring speech result (too soon)")
+            Log.d(TAG, "Ignoring (too soon)")
             return
         }
         lastProcessedTime = now
         
-        Log.d(TAG, "Processing speech: '$text'")
+        Log.d(TAG, "Processing: '$text'")
         
         val transcript = "User: $text"
         contactRepository.saveCallLog("${SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())}: $transcript")
         
         val lowerText = text.lowercase(Locale.getDefault()).trim()
         
-        // Check for SOS trigger word first (custom word set by user)
-        if (sosTriggerWord.isNotEmpty() && lowerText.contains(sosTriggerWord)) {
-            Log.d(TAG, "SOS TRIGGER WORD DETECTED: $sosTriggerWord")
+        // Check SOS trigger word first
+        if (sosTriggerWord.isNotEmpty() && sosTriggerWord.length >= 3 && lowerText.contains(sosTriggerWord)) {
+            Log.d(TAG, "SOS TRIGGER: $sosTriggerWord")
             stopVoiceListening()
             speakWithAi("Emergency triggered. Sending help now.")
-            mainHandler.postDelayed({ triggerEmergency() }, 2000)
+            uiHandler.postDelayed({ triggerEmergency() }, 2000)
             return
         }
         
-        // Check for emergency keywords
+        // Emergency keywords
         val emergencyKeywords = listOf("help", "emergency", "danger", "save me", "call police", "attack")
         if (emergencyKeywords.any { lowerText.contains(it) }) {
-            Log.d(TAG, "Emergency keyword detected")
+            Log.d(TAG, "Emergency detected")
             stopVoiceListening()
             speakWithAi("I am sending help to your location immediately. Stay on the line.")
-            mainHandler.postDelayed({ triggerEmergency() }, 2500)
+            uiHandler.postDelayed({ triggerEmergency() }, 2500)
             return
         }
         
-        // Check for negative/unsafe responses  
-        val unsafeKeywords = listOf("no", "not safe", "not okay", "trouble", "scared", "afraid", "hurt")
+        // Unsafe keywords  
+        val unsafeKeywords = listOf("not safe", "not okay", "trouble", "scared", "afraid", "hurt")
         if (unsafeKeywords.any { lowerText.contains(it) }) {
-            Log.d(TAG, "Unsafe response detected")
+            Log.d(TAG, "Unsafe detected")
             stopVoiceListening()
             speakWithAi("I understand. I'm alerting your emergency contacts right now. Help is on the way.")
-            mainHandler.postDelayed({ triggerEmergency() }, 2500)
+            uiHandler.postDelayed({ triggerEmergency() }, 2500)
             return
         }
         
-        // Check for safe responses
+        // Check for "no" but not in context of other words
+        if (lowerText == "no" || lowerText.startsWith("no ") || lowerText.endsWith(" no")) {
+            Log.d(TAG, "No detected")
+            stopVoiceListening()
+            speakWithAi("I understand. I'm alerting your emergency contacts right now.")
+            uiHandler.postDelayed({ triggerEmergency() }, 2500)
+            return
+        }
+        
+        // Safe keywords
         val safeKeywords = listOf("yes", "yeah", "yep", "okay", "ok", "fine", "safe", "good", "alright", "i'm fine", "i am fine", "i'm okay", "i am okay")
         if (safeKeywords.any { lowerText.contains(it) || lowerText == it }) {
-            Log.d(TAG, "Safe response detected")
-            speakWithAi("Okay, I'm glad you're safe. I'll stay on the line with you. Let me know if anything changes.")
+            Log.d(TAG, "Safe detected")
+            speakWithAi("Okay, I'm glad you're safe. I'll stay on the line with you.")
             return
         }
         
-        // Unknown response - ask again
-        Log.d(TAG, "Unknown response, asking again")
-        speakWithAi("I didn't quite catch that. Are you safe? Say yes if you're okay, or say help if you need assistance.")
+        // Unknown - ask again
+        Log.d(TAG, "Unknown response")
+        speakWithAi("Are you safe? Say yes or no.")
     }
 
     private fun answerCall() {
@@ -526,18 +552,18 @@ class FakeCallActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             binding.tvIosStatus.text = "Connected"
         }
         
-        // Start call timer
+        // Start call timer on separate handler
         callSeconds = 0
-        mainHandler.postDelayed(timerRunnable, 1000)
+        timerHandler.postDelayed(timerRunnable, 1000)
         
         // Create speech recognizer for this call
         createSpeechRecognizer()
 
         // Speak with AI voice after a short delay
-        mainHandler.postDelayed({
+        uiHandler.postDelayed({
             val script = "Hey. I'm just checking in. Are you safe? Just say yes or no."
             speakWithAi(script)
-        }, 500)
+        }, 800)
     }
     
     private fun speakWithAi(text: String) {
@@ -545,32 +571,39 @@ class FakeCallActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         
         // Stop listening while speaking
         isTtsSpeaking = true
-        stopVoiceListening()
+        speechHandler.removeCallbacksAndMessages(null)
+        
+        synchronized(recognizerLock) {
+            try {
+                speechRecognizer?.stopListening()
+            } catch (e: Exception) { }
+            isCurrentlyListening = false
+        }
         
         Log.d(TAG, "AI Speaking: $text")
         
         if (isTtsReady && tts != null) {
-            // Set up utterance progress listener before speaking
             tts?.setOnUtteranceProgressListener(object : android.speech.tts.UtteranceProgressListener() {
                 override fun onStart(utteranceId: String?) {
                     Log.d(TAG, "TTS started")
-                    runOnUiThread {
-                        updateStatusText("AI Speaking...")
-                    }
+                    uiHandler.post { updateStatusText("AI Speaking...") }
                 }
                 
                 override fun onDone(utteranceId: String?) {
-                    Log.d(TAG, "TTS completed")
+                    Log.d(TAG, "TTS done")
                     isTtsSpeaking = false
-                    runOnUiThread { 
+                    
+                    uiHandler.post { 
                         if (isCallActive) {
-                            // Enable listening and start after TTS completes
+                            updateStatusText("Listening...")
+                            // Enable listening after TTS completes with delay
                             isListeningEnabled = true
-                            mainHandler.postDelayed({
-                                if (isCallActive && !isTtsSpeaking) {
-                                    startVoiceListening()
+                            recognitionRetryCount = 0
+                            speechHandler.postDelayed({
+                                if (isCallActive && !isTtsSpeaking && !isCurrentlyListening) {
+                                    startVoiceListeningInternal()
                                 }
-                            }, 800)
+                            }, 1500)
                         }
                     }
                 }
@@ -578,10 +611,15 @@ class FakeCallActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                 override fun onError(utteranceId: String?) {
                     Log.e(TAG, "TTS error")
                     isTtsSpeaking = false
-                    runOnUiThread { 
+                    uiHandler.post { 
                         if (isCallActive) {
                             isListeningEnabled = true
-                            startVoiceListening()
+                            recognitionRetryCount = 0
+                            speechHandler.postDelayed({
+                                if (isCallActive && !isTtsSpeaking) {
+                                    startVoiceListeningInternal()
+                                }
+                            }, 1000)
                         }
                     }
                 }
@@ -589,20 +627,18 @@ class FakeCallActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             
             val params = Bundle()
             params.putString(TextToSpeech.Engine.KEY_PARAM_STREAM, AudioManager.STREAM_MUSIC.toString())
-            tts?.speak(text, TextToSpeech.QUEUE_FLUSH, params, "AI_VOICE_${System.currentTimeMillis()}")
+            tts?.speak(text, TextToSpeech.QUEUE_FLUSH, params, "AI_${System.currentTimeMillis()}")
         } else {
-            // TTS not ready, save for later
             pendingTtsScript = text
             isTtsSpeaking = false
             
-            mainHandler.postDelayed({
+            uiHandler.postDelayed({
                 if (isTtsReady && pendingTtsScript != null && isCallActive) {
                     speakWithAi(pendingTtsScript!!)
                     pendingTtsScript = null
                 } else if (isCallActive) {
-                    // Fallback: just start listening without TTS
                     isListeningEnabled = true
-                    startVoiceListening()
+                    speechHandler.postDelayed({ startVoiceListeningInternal() }, 1000)
                 }
             }, 1500)
         }
@@ -614,14 +650,16 @@ class FakeCallActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         isCallActive = false
         isListeningEnabled = false
         isTtsSpeaking = false
+        isCurrentlyListening = false
         
         ringtone?.stop()
         
         // Stop all handlers
-        mainHandler.removeCallbacksAndMessages(null)
+        timerHandler.removeCallbacksAndMessages(null)
+        speechHandler.removeCallbacksAndMessages(null)
+        uiHandler.removeCallbacksAndMessages(null)
         
         // Stop speech recognition
-        stopVoiceListening()
         destroySpeechRecognizer()
         
         // Stop TTS
@@ -644,32 +682,28 @@ class FakeCallActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             isTtsReady = result != TextToSpeech.LANG_MISSING_DATA && result != TextToSpeech.LANG_NOT_SUPPORTED
             
             if (isTtsReady) {
-                // Set voice parameters for more natural sound
                 tts?.setPitch(1.1f)
                 tts?.setSpeechRate(0.9f)
+                Log.d(TAG, "TTS ready")
                 
-                Log.d(TAG, "TTS initialized successfully")
-                
-                // If call was already answered and there's pending speech
                 if (isCallAnswered && pendingTtsScript != null) {
-                    mainHandler.postDelayed({
+                    uiHandler.postDelayed({
                         speakWithAi(pendingTtsScript!!)
                         pendingTtsScript = null
-                    }, 300)
+                    }, 500)
                 }
             } else {
                 Log.e(TAG, "TTS language not supported")
             }
         } else {
             isTtsReady = false
-            Log.e(TAG, "TTS initialization failed")
+            Log.e(TAG, "TTS init failed")
             
-            // TTS failed but don't block the call - start listening anyway if call is answered
             if (isCallAnswered && isCallActive) {
-                mainHandler.postDelayed({
+                speechHandler.postDelayed({
                     isListeningEnabled = true
-                    startVoiceListening()
-                }, 1000)
+                    startVoiceListeningInternal()
+                }, 1500)
             }
         }
     }
@@ -679,21 +713,22 @@ class FakeCallActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         isCallAnswered = false
         isCallActive = false
         isListeningEnabled = false
+        isTtsSpeaking = false
         
         ringtone?.stop()
-        mainHandler.removeCallbacksAndMessages(null)
         
-        // Clean up speech recognizer
+        timerHandler.removeCallbacksAndMessages(null)
+        speechHandler.removeCallbacksAndMessages(null)
+        uiHandler.removeCallbacksAndMessages(null)
+        
         destroySpeechRecognizer()
         
-        // Clean up TTS
         try {
             tts?.stop()
             tts?.shutdown()
         } catch (e: Exception) { }
         tts = null
         
-        // Reset audio
         try {
             audioManager.mode = AudioManager.MODE_NORMAL
             audioManager.isSpeakerphoneOn = false

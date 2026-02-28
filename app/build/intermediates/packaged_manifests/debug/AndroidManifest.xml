@@ -22,6 +22,11 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
 
+    <!-- Required by Lint to clarify that Telephony is not strictly required for install on all devices -->
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
+
     <!-- Although the *SdkVersion is captured in gradle build files, this is required for non gradle builds -->
     <!-- <uses-sdk android:minSdkVersion="14"/> -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -46,6 +51,7 @@
         android:label="SHEild"
         android:roundIcon="@drawable/ic_launcher_legacy"
         android:supportsRtl="true"
+        android:testOnly="true"
         android:theme="@style/Theme.FakeCallDistress" >
         <service
             android:name="com.example.fakecalldistress.service.JourneyService"

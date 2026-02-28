@@ -413,6 +413,55 @@
                             android:textSize="14sp"/>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
+                
+                <!-- Journey Tracking Header -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginBottom="16dp">
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@android:drawable/ic_menu_mylocation"
+                        app:tint="@color/m3_navy_primary"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Location Tracking"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/m3_navy_primary"
+                        android:layout_marginStart="8dp"/>
+                </LinearLayout>
+                
+                <!-- Location Tracking Container Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="4dp"
+                    app:cardBackgroundColor="@color/white">
+                    <LinearLayout
+                        android:id="@+id/llLocationContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp"
+                        android:minHeight="100dp">
+                        <TextView
+                            android:id="@+id/tvLocationPlaceholder"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="No location data.\nStart journey tracking to see locations."
+                            android:gravity="center"
+                            android:padding="24dp"
+                            android:textColor="@color/text_grey"
+                            android:textSize="14sp"/>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
         </ScrollView>
 

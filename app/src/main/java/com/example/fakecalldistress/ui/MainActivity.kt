@@ -344,7 +344,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateTrackingLog() {
-        // UI placeholder update if needed
+        // Refresh location display if on history tab
+        if (binding.viewCommunity.visibility == View.VISIBLE) {
+            loadLocationHistory()
+        }
     }
 
     private fun setupBottomNav() {
@@ -375,47 +378,117 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadIncidents() {
+        // Load manual incident logs
         val prefs = getSharedPreferences("incidents", MODE_PRIVATE)
         val logs = prefs.getStringSet("logs", emptySet())?.toList()?.sortedDescending() ?: emptyList()
         
         val container = findViewById<android.widget.LinearLayout>(R.id.llTimelineContainer)
-        if (container == null) return
-        container.removeAllViews()
+        if (container != null) {
+            container.removeAllViews()
 
-        if (logs.isEmpty()) {
-            val emptyText = TextView(this)
-            emptyText.text = "No safety logs yet."
-            emptyText.gravity = android.view.Gravity.CENTER
-            emptyText.setPadding(0, 100, 0, 0)
-            emptyText.setTextColor(getColor(R.color.text_grey))
-            container.addView(emptyText)
-        } else {
-            for ((index, log) in logs.withIndex()) {
-                val itemView = layoutInflater.inflate(R.layout.item_timeline_log, container, false)
-                val tvTime = itemView.findViewById<TextView>(R.id.tvLogTimestamp)
-                val tvContent = itemView.findViewById<TextView>(R.id.tvLogContent)
-                val topLine = itemView.findViewById<View>(R.id.viewLineTop)
-                val bottomLine = itemView.findViewById<View>(R.id.viewLineBottom)
+            if (logs.isEmpty()) {
+                val emptyText = TextView(this)
+                emptyText.text = "No safety logs yet."
+                emptyText.gravity = android.view.Gravity.CENTER
+                emptyText.setPadding(0, 100, 0, 0)
+                emptyText.setTextColor(getColor(R.color.text_grey))
+                container.addView(emptyText)
+            } else {
+                for ((index, log) in logs.withIndex()) {
+                    val itemView = layoutInflater.inflate(R.layout.item_timeline_log, container, false)
+                    val tvTime = itemView.findViewById<TextView>(R.id.tvLogTimestamp)
+                    val tvContent = itemView.findViewById<TextView>(R.id.tvLogContent)
+                    val topLine = itemView.findViewById<View>(R.id.viewLineTop)
+                    val bottomLine = itemView.findViewById<View>(R.id.viewLineBottom)
 
-                // Timeline visual logic
-                if (index == 0) {
-                    topLine.visibility = View.INVISIBLE
+                    if (index == 0) topLine.visibility = View.INVISIBLE
+                    if (index == logs.size - 1) bottomLine.visibility = View.INVISIBLE
+
+                    val parts = log.split("\n", limit = 2)
+                    if (parts.size == 2) {
+                        tvTime.text = parts[0]
+                        tvContent.text = parts[1]
+                    } else {
+                        tvContent.text = log
+                    }
+                    container.addView(itemView)
                 }
-                if (index == logs.size - 1) {
-                    bottomLine.visibility = View.INVISIBLE
-                }
-
-                // Split timestamp from content (format is "dd/MM HH:mm\nContent")
-                val parts = log.split("\n", limit = 2)
-                if (parts.size == 2) {
-                    tvTime.text = parts[0]
-                    tvContent.text = parts[1]
-                } else {
-                    tvContent.text = log
-                }
-
-                container.addView(itemView)
             }
+        }
+        
+        // Load location tracking data
+        loadLocationHistory()
+    }
+    
+    private fun loadLocationHistory() {
+        val locationContainer = findViewById<android.widget.LinearLayout>(R.id.llLocationContainer)
+        if (locationContainer == null) return
+        
+        locationContainer.removeAllViews()
+        
+        val locations = JourneyService.lastLocations.toList()
+        
+        if (locations.isEmpty()) {
+            val emptyText = TextView(this)
+            emptyText.text = "No location data.\nStart journey tracking to see locations."
+            emptyText.gravity = android.view.Gravity.CENTER
+            emptyText.setPadding(48, 48, 48, 48)
+            emptyText.setTextColor(getColor(R.color.text_grey))
+            emptyText.textSize = 14f
+            locationContainer.addView(emptyText)
+        } else {
+            // Show last 10 locations (most recent first)
+            val recentLocations = locations.takeLast(10).reversed()
+            
+            for ((index, locString) in recentLocations.withIndex()) {
+                val itemView = layoutInflater.inflate(R.layout.item_location_log, locationContainer, false)
+                    ?: createLocationTextView(locString)
+                
+                if (itemView is TextView) {
+                    locationContainer.addView(itemView)
+                } else {
+                    val tvTime = itemView.findViewById<TextView>(R.id.tvLocationTime)
+                    val tvLink = itemView.findViewById<TextView>(R.id.tvLocationLink)
+                    
+                    // Parse: "HH:mm:ss: https://maps.google.com/?q=lat,lon"
+                    val colonIndex = locString.indexOf(": http")
+                    if (colonIndex > 0 && tvTime != null && tvLink != null) {
+                        tvTime.text = locString.substring(0, colonIndex)
+                        val url = locString.substring(colonIndex + 2)
+                        tvLink.text = "Open in Maps"
+                        tvLink.setOnClickListener {
+                            try {
+                                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+                            } catch (e: Exception) {
+                                Toast.makeText(this, "Cannot open link", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    } else {
+                        tvTime?.text = locString
+                        tvLink?.visibility = View.GONE
+                    }
+                    locationContainer.addView(itemView)
+                }
+            }
+            
+            if (locations.size > 10) {
+                val moreText = TextView(this)
+                moreText.text = "... and ${locations.size - 10} more locations"
+                moreText.gravity = android.view.Gravity.CENTER
+                moreText.setPadding(0, 24, 0, 0)
+                moreText.setTextColor(getColor(R.color.text_grey))
+                moreText.textSize = 12f
+                locationContainer.addView(moreText)
+            }
+        }
+    }
+    
+    private fun createLocationTextView(text: String): TextView {
+        return TextView(this).apply {
+            this.text = text
+            setPadding(0, 16, 0, 16)
+            textSize = 13f
+            setTextColor(getColor(R.color.text_dark))
         }
     }
 
