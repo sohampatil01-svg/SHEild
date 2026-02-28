@@ -174,7 +174,39 @@ class MainActivity : AppCompatActivity() {
         }
         binding.switchInactivityCheck.setOnCheckedChangeListener { _, isChecked -> safetySettingsRepository.setInactivityCheckEnabled(isChecked) }
         binding.switchSafeArrival.setOnCheckedChangeListener { _, isChecked -> safetySettingsRepository.setSafeArrivalEnabled(isChecked) }
-        binding.switchVoiceAuth.setOnCheckedChangeListener { _, isChecked -> safetySettingsRepository.setVoiceAuthEnabled(isChecked) }
+        binding.switchVoiceAuth.setOnCheckedChangeListener { _, isChecked -> 
+            safetySettingsRepository.setVoiceAuthEnabled(isChecked)
+            if (isChecked) {
+                Toast.makeText(this, "Voice Authentication enabled. Set your safe word below.", Toast.LENGTH_SHORT).show()
+            }
+        }
+        
+        // Save safe word when text changes (with debounce)
+        binding.etSafeWord.addTextChangedListener(object : android.text.TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: android.text.Editable?) {
+                val word = s?.toString()?.trim() ?: ""
+                if (word.length >= 3) {
+                    safetySettingsRepository.setSecretSafeWord(word)
+                }
+            }
+        })
+        
+        // Load and setup SOS trigger word
+        binding.etSosTriggerWord.setText(safetySettingsRepository.getSosTriggerWord())
+        binding.etSosTriggerWord.addTextChangedListener(object : android.text.TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: android.text.Editable?) {
+                val word = s?.toString()?.trim() ?: ""
+                if (word.length >= 3) {
+                    safetySettingsRepository.setSosTriggerWord(word)
+                } else if (word.isEmpty()) {
+                    safetySettingsRepository.setSosTriggerWord("")
+                }
+            }
+        })
 
         binding.btnSaveContact.setOnClickListener {
             val name = binding.etContactName.text.toString()

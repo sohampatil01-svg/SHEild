@@ -37,6 +37,9 @@ class SafetySettingsRepository(context: Context) {
     fun getSecretSafeWord(): String = prefs.getString("secret_safe_word", "STOP") ?: "STOP"
     fun setSecretSafeWord(word: String) = prefs.edit().putString("secret_safe_word", word).apply()
 
+    fun getSosTriggerWord(): String = prefs.getString("sos_trigger_word", "") ?: ""
+    fun setSosTriggerWord(word: String) = prefs.edit().putString("sos_trigger_word", word).apply()
+
     // Geofencing
     fun saveUnsafeZone(lat: Double, lon: Double) {
         prefs.edit().putFloat("unsafe_lat", lat.toFloat()).putFloat("unsafe_lon", lon.toFloat()).apply()

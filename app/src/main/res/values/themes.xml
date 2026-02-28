@@ -1,16 +1,34 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+    <!-- Base application theme - Material 3 Inspired -->
     <style name="Theme.FakeCallDistress" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <!-- Primary brand color -->
+        <item name="colorPrimary">@color/m3_navy_primary</item>
+        <item name="colorPrimaryVariant">@color/m3_navy_primary</item>
         <item name="colorOnPrimary">@color/white</item>
-        <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_700</item>
-        <item name="colorOnSecondary">@color/black</item>
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
-        <!-- Customize your theme here. -->
+        
+        <!-- Secondary brand color -->
+        <item name="colorSecondary">@color/m3_crimson_sos</item>
+        <item name="colorSecondaryVariant">@color/m3_crimson_sos</item>
+        <item name="colorOnSecondary">@color/white</item>
+        
+        <!-- Surface colors -->
+        <item name="colorSurface">@color/white</item>
+        <item name="colorOnSurface">@color/text_dark</item>
+        <item name="colorSurfaceVariant">@color/m3_surface_variant</item>
+        
+        <!-- Error color -->
+        <item name="colorError">@color/m3_crimson_sos</item>
+        <item name="colorOnError">@color/white</item>
+        
+        <!-- Status bar color -->
+        <item name="android:statusBarColor">@color/m3_navy_primary</item>
+        <item name="android:navigationBarColor">@color/white</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
+        
+        <!-- Switch colors -->
+        <item name="colorControlActivated">@color/m3_navy_primary</item>
+        
+        <!-- Text input styling -->
+        <item name="textInputStyle">@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox</item>
     </style>
 </resources>

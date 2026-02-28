@@ -281,68 +281,138 @@
             android:id="@+id/viewCommunity"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="16dp"
+            android:background="@color/sheild_background"
             android:visibility="gone">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-                <TextView
-                    android:text="Incident History"
-                    android:textSize="22sp"
-                    android:textStyle="bold"
-                    android:layout_marginBottom="16dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/sheild_blue_primary"/>
+                android:orientation="vertical"
+                android:paddingHorizontal="16dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="32dp">
                 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Log an incident..."
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etIncident"
-                        android:layout_width="match_parent"
-                        android:layout_height="100dp"
-                        android:gravity="top"/>
-                </com.google.android.material.textfield.TextInputLayout>
-                <Button
-                    android:id="@+id/btnPostIncident"
-                    android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:layout_marginTop="12dp"
-                    android:text="Save to Timeline"
-                    app:cornerRadius="24dp"
-                    android:backgroundTint="@color/m3_navy_primary"/>
-                
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Timeline"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/m3_navy_primary"
-                    android:layout_marginTop="32dp"
-                    android:layout_marginStart="8dp"/>
-
+                <!-- Header -->
                 <LinearLayout
-                    android:id="@+id/llTimelineContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginTop="16dp"
-                    android:paddingBottom="40dp">
-                    <!-- Dynamic timeline items will be injected here -->
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="20dp">
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@android:drawable/ic_menu_recent_history"
+                        app:tint="@color/m3_navy_primary"/>
                     <TextView
-                        android:id="@+id/tvIncidentLog"
+                        android:text="Safety Log"
+                        android:textSize="28sp"
+                        android:textStyle="bold"
+                        android:layout_marginStart="12dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/m3_navy_primary"/>
+                </LinearLayout>
+                
+                <!-- Log Incident Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="4dp"
+                    app:cardBackgroundColor="@color/white">
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="No logs yet."
-                        android:gravity="center"
-                        android:padding="40dp"
-                        android:textColor="@color/text_grey"/>
+                        android:orientation="vertical"
+                        android:padding="20dp">
+                        
+                        <TextView
+                            android:text="Log an Incident"
+                            android:textStyle="bold"
+                            android:textSize="16sp"
+                            android:textColor="@color/text_dark"
+                            android:layout_marginBottom="12dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                        
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Describe the incident..."
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            app:boxCornerRadiusTopStart="12dp"
+                            app:boxCornerRadiusTopEnd="12dp"
+                            app:boxCornerRadiusBottomStart="12dp"
+                            app:boxCornerRadiusBottomEnd="12dp">
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etIncident"
+                                android:layout_width="match_parent"
+                                android:layout_height="100dp"
+                                android:gravity="top"
+                                android:inputType="textMultiLine"/>
+                        </com.google.android.material.textfield.TextInputLayout>
+                        
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnPostIncident"
+                            android:layout_width="match_parent"
+                            android:layout_height="52dp"
+                            android:layout_marginTop="12dp"
+                            android:text="Save to Timeline"
+                            app:cornerRadius="12dp"
+                            android:backgroundTint="@color/m3_navy_primary"
+                            app:icon="@android:drawable/ic_menu_save"
+                            app:iconGravity="textStart"/>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+                
+                <!-- Timeline Header -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="16dp">
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@android:drawable/ic_menu_sort_by_size"
+                        app:tint="@color/m3_navy_primary"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Your Timeline"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/m3_navy_primary"
+                        android:layout_marginStart="8dp"/>
                 </LinearLayout>
+
+                <!-- Timeline Container Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="4dp"
+                    app:cardBackgroundColor="@color/white">
+                    <LinearLayout
+                        android:id="@+id/llTimelineContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp"
+                        android:minHeight="120dp">
+                        <TextView
+                            android:id="@+id/tvIncidentLog"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="No safety logs yet.\nRecord incidents to build your timeline."
+                            android:gravity="center"
+                            android:padding="32dp"
+                            android:textColor="@color/text_grey"
+                            android:textSize="14sp"/>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
         </ScrollView>
 
@@ -351,131 +421,242 @@
             android:id="@+id/viewSettings"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="16dp"
+            android:background="@color/sheild_background"
+            android:scrollbarThumbVertical="@color/scrollbar_thumb"
             android:visibility="gone">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingHorizontal="16dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="32dp">
                 
-                <TextView
-                    android:text="Configuration"
-                    android:textSize="22sp"
-                    android:textStyle="bold"
-                    android:layout_marginBottom="16dp"
-                    android:layout_width="wrap_content"
+                <!-- Header -->
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/sheild_blue_primary"/>
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="20dp">
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@android:drawable/ic_menu_preferences"
+                        app:tint="@color/m3_navy_primary"/>
+                    <TextView
+                        android:text="Settings"
+                        android:textSize="28sp"
+                        android:textStyle="bold"
+                        android:layout_marginStart="12dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/m3_navy_primary"/>
+                </LinearLayout>
 
-                <!-- Emergency Contact -->
+                <!-- Emergency Contact Card -->
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
-                    app:cardElevation="2dp"
-                    app:cardCornerRadius="12dp"
-                    app:contentPadding="16dp">
+                    app:cardElevation="4dp"
+                    app:cardCornerRadius="20dp"
+                    app:cardBackgroundColor="@color/white"
+                    app:strokeWidth="0dp">
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
-                        <TextView
-                            android:text="Emergency Contact"
-                            android:textStyle="bold"
-                            android:textColor="@color/sheild_blue_dark"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
+                        android:orientation="vertical"
+                        android:padding="20dp">
+                        
+                        <!-- Section Header -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:layout_marginBottom="16dp">
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:src="@android:drawable/ic_menu_myplaces"
+                                app:tint="@color/m3_crimson_sos"/>
+                            <TextView
+                                android:text="Emergency Contact"
+                                android:textStyle="bold"
+                                android:textSize="18sp"
+                                android:textColor="@color/text_dark"
+                                android:layout_marginStart="12dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+                        </LinearLayout>
+                        
                         <TextView
                             android:id="@+id/tvSavedContact"
                             android:text="Not Set"
                             android:textSize="14sp"
-                            android:layout_marginTop="4dp"
-                            android:layout_marginBottom="12dp"
+                            android:textColor="@color/text_grey"
+                            android:drawableStart="@android:drawable/ic_secure"
+                            android:drawablePadding="8dp"
+                            android:drawableTint="@color/m3_status_green"
+                            android:layout_marginBottom="16dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
-                        <EditText
-                            android:id="@+id/etContactName"
-                            android:hint="Name"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"/>
-                        <EditText
-                            android:id="@+id/etContactNumber"
-                            android:hint="Phone"
-                            android:inputType="phone"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"/>
-                        <Button
-                            android:id="@+id/btnSaveContact"
-                            android:text="Save Contact"
+                        
+                        <com.google.android.material.textfield.TextInputLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:backgroundTint="@color/sheild_blue_primary"/>
+                            android:hint="Contact Name"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            app:boxCornerRadiusTopStart="12dp"
+                            app:boxCornerRadiusTopEnd="12dp"
+                            app:boxCornerRadiusBottomStart="12dp"
+                            app:boxCornerRadiusBottomEnd="12dp"
+                            android:layout_marginBottom="12dp">
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etContactName"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"/>
+                        </com.google.android.material.textfield.TextInputLayout>
+                        
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Phone Number"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            app:boxCornerRadiusTopStart="12dp"
+                            app:boxCornerRadiusTopEnd="12dp"
+                            app:boxCornerRadiusBottomStart="12dp"
+                            app:boxCornerRadiusBottomEnd="12dp"
+                            android:layout_marginBottom="16dp">
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etContactNumber"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="phone"/>
+                        </com.google.android.material.textfield.TextInputLayout>
+                        
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnSaveContact"
+                            android:layout_width="match_parent"
+                            android:layout_height="52dp"
+                            android:text="Save Contact"
+                            app:cornerRadius="12dp"
+                            android:backgroundTint="@color/m3_navy_primary"
+                            app:icon="@android:drawable/ic_menu_save"
+                            app:iconGravity="textStart"/>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
-                <!-- Fake Call &amp; Triggers Config -->
+                <!-- Fake Call Settings Card -->
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:cardElevation="2dp"
-                    app:cardCornerRadius="12dp"
-                    app:contentPadding="16dp">
+                    android:layout_marginBottom="16dp"
+                    app:cardElevation="4dp"
+                    app:cardCornerRadius="20dp"
+                    app:cardBackgroundColor="@color/white"
+                    app:strokeWidth="0dp">
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
-                        <TextView
-                            android:text="Fake Call Settings"
-                            android:textStyle="bold"
-                            android:textColor="@color/sheild_blue_dark"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
-                        <EditText
-                            android:id="@+id/etFakeName"
-                            android:hint="Caller Name (e.g. Dad)"
+                        android:orientation="vertical"
+                        android:padding="20dp">
+                        
+                        <!-- Section Header -->
+                        <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"/>
-                        <Button
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:layout_marginBottom="16dp">
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:src="@android:drawable/sym_action_call"
+                                app:tint="@color/m3_navy_primary"/>
+                            <TextView
+                                android:text="Fake Call"
+                                android:textStyle="bold"
+                                android:textSize="18sp"
+                                android:textColor="@color/text_dark"
+                                android:layout_marginStart="12dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+                        </LinearLayout>
+                        
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Caller Display Name (e.g. Dad, Mom)"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            app:boxCornerRadiusTopStart="12dp"
+                            app:boxCornerRadiusTopEnd="12dp"
+                            app:boxCornerRadiusBottomStart="12dp"
+                            app:boxCornerRadiusBottomEnd="12dp"
+                            android:layout_marginBottom="16dp">
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etFakeName"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"/>
+                        </com.google.android.material.textfield.TextInputLayout>
+                        
+                        <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnSaveCaller"
+                            android:layout_width="match_parent"
+                            android:layout_height="52dp"
                             android:text="Update Caller ID"
+                            app:cornerRadius="12dp"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            app:strokeColor="@color/m3_navy_primary"
+                            android:textColor="@color/m3_navy_primary"
+                            app:icon="@android:drawable/ic_menu_edit"
+                            app:iconGravity="textStart"
+                            app:iconTint="@color/m3_navy_primary"
+                            android:layout_marginBottom="12dp"/>
+                        
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:backgroundTint="@color/sheild_blue_primary"/>
+                            android:orientation="horizontal">
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnScheduleCall"
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="52dp"
+                                android:text="Schedule"
+                                app:cornerRadius="12dp"
+                                android:backgroundTint="@color/m3_navy_primary"
+                                app:icon="@android:drawable/ic_menu_recent_history"
+                                app:iconGravity="textStart"
+                                android:layout_marginEnd="8dp"/>
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnCancelSchedule"
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="52dp"
+                                android:text="Cancel"
+                                app:cornerRadius="12dp"
+                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                                app:strokeColor="@color/text_grey"
+                                android:textColor="@color/text_grey"
+                                app:icon="@android:drawable/ic_menu_close_clear_cancel"
+                                app:iconGravity="textStart"
+                                app:iconTint="@color/text_grey"/>
+                        </LinearLayout>
 
-                        <Button
-                            android:id="@+id/btnScheduleCall"
-                            android:text="Schedule Call (30s)"
+                        <View
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:backgroundTint="@color/sheild_blue_dark"/>
-
-                        <Button
-                            android:id="@+id/btnCancelSchedule"
-                            android:text="Cancel Scheduled Call"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:backgroundTint="@color/text_grey"
-                            android:visibility="visible"/>
-
-                        <com.google.android.material.switchmaterial.SwitchMaterial
-                            android:id="@+id/switchShake"
-                            android:text="Shake to trigger Fake Call"
-                            android:layout_marginTop="8dp"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"/>
-
-                        <com.google.android.material.switchmaterial.SwitchMaterial
-                            android:id="@+id/switchScream"
-                            android:text="Scream Detection (Beta)"
-                            android:layout_marginTop="8dp"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"/>
-
+                            android:layout_height="1dp"
+                            android:background="@color/divider_color"
+                            android:layout_marginVertical="20dp"/>
+                        
                         <TextView
                             android:text="Call Interface Style"
                             android:textStyle="bold"
-                            android:textColor="@color/sheild_blue_dark"
-                            android:layout_marginTop="16dp"
+                            android:textSize="14sp"
+                            android:textColor="@color/text_dark"
+                            android:layout_marginBottom="12dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
 
@@ -483,7 +664,6 @@
                             android:id="@+id/toggleSkin"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
                             app:singleSelection="true"
                             app:selectionRequired="true"
                             app:checkedButton="@+id/btnAndroidSkin">
@@ -491,132 +671,704 @@
                                 android:id="@+id/btnAndroidSkin"
                                 style="?attr/materialButtonOutlinedStyle"
                                 android:layout_width="0dp"
-                                android:layout_height="wrap_content"
+                                android:layout_height="48dp"
                                 android:layout_weight="1"
-                                android:text="Material (Android)"/>
+                                android:text="Android"
+                                app:cornerRadius="12dp"/>
                             <Button
                                 android:id="@+id/btnIosSkin"
                                 style="?attr/materialButtonOutlinedStyle"
                                 android:layout_width="0dp"
-                                android:layout_height="wrap_content"
+                                android:layout_height="48dp"
                                 android:layout_weight="1"
-                                android:text="Apple (iOS)"/>
+                                android:text="iOS"
+                                app:cornerRadius="12dp"/>
                         </com.google.android.material.button.MaterialButtonToggleGroup>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
-                <!-- Safety Automation -->
+                <!-- Detection Triggers Card -->
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    app:cardElevation="2dp"
-                    app:cardCornerRadius="12dp"
-                    app:contentPadding="16dp">
+                    android:layout_marginBottom="16dp"
+                    app:cardElevation="4dp"
+                    app:cardCornerRadius="20dp"
+                    app:cardBackgroundColor="@color/white"
+                    app:strokeWidth="0dp">
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
+                        android:orientation="vertical"
+                        android:padding="20dp">
+                        
+                        <!-- Section Header -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:layout_marginBottom="8dp">
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:src="@android:drawable/ic_lock_idle_alarm"
+                                app:tint="@color/m3_crimson_sos"/>
+                            <TextView
+                                android:text="Detection Triggers"
+                                android:textStyle="bold"
+                                android:textSize="18sp"
+                                android:textColor="@color/text_dark"
+                                android:layout_marginStart="12dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+                        </LinearLayout>
+                        
                         <TextView
-                            android:text="Safety Automation"
-                            android:textStyle="bold"
-                            android:textColor="@color/sheild_blue_dark"
+                            android:text="Auto-trigger safety features based on device sensors"
+                            android:textSize="13sp"
+                            android:textColor="@color/text_grey"
+                            android:layout_marginBottom="16dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
 
-                        <com.google.android.material.switchmaterial.SwitchMaterial
-                            android:id="@+id/switchSilentSos"
-                            android:text="Silent SOS (no sound or popups)"
-                            android:layout_marginTop="8dp"
+                        <!-- Shake Detection -->
+                        <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"/>
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:paddingVertical="12dp">
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+                                <TextView
+                                    android:text="Shake Detection"
+                                    android:textStyle="bold"
+                                    android:textSize="15sp"
+                                    android:textColor="@color/text_dark"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"/>
+                                <TextView
+                                    android:text="Shake phone vigorously to trigger Fake Call"
+                                    android:textSize="12sp"
+                                    android:textColor="@color/text_grey"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"/>
+                            </LinearLayout>
+                            <com.google.android.material.switchmaterial.SwitchMaterial
+                                android:id="@+id/switchShake"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+                        </LinearLayout>
+                        
+                        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/divider_color"/>
 
-                        <com.google.android.material.switchmaterial.SwitchMaterial
-                            android:id="@+id/switchMultiChannelSos"
-                            android:text="Also share SOS via other apps (WhatsApp, Telegram, etc.)"
-                            android:layout_marginTop="8dp"
+                        <!-- Scream Detection -->
+                        <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"/>
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:paddingVertical="12dp">
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:gravity="center_vertical">
+                                    <TextView
+                                        android:text="AI Scream Detection"
+                                        android:textStyle="bold"
+                                        android:textSize="15sp"
+                                        android:textColor="@color/text_dark"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"/>
+                                    <TextView
+                                        android:text="BETA"
+                                        android:textSize="10sp"
+                                        android:textColor="@color/white"
+                                        android:background="@color/m3_navy_primary"
+                                        android:paddingHorizontal="6dp"
+                                        android:paddingVertical="2dp"
+                                        android:layout_marginStart="8dp"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"/>
+                                </LinearLayout>
+                                <TextView
+                                    android:text="Uses AI to detect screams and trigger SOS"
+                                    android:textSize="12sp"
+                                    android:textColor="@color/text_grey"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"/>
+                            </LinearLayout>
+                            <com.google.android.material.switchmaterial.SwitchMaterial
+                                android:id="@+id/switchScream"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+                        </LinearLayout>
+                        
+                        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/divider_color"/>
 
-                        <com.google.android.material.switchmaterial.SwitchMaterial
-                            android:id="@+id/switchAutoCallback"
-                            android:text="Auto-callback from trusted contact after SOS"
-                            android:layout_marginTop="8dp"
+                        <!-- Fall Detection -->
+                        <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"/>
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:paddingVertical="12dp">
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+                                <TextView
+                                    android:text="Fall Detection"
+                                    android:textStyle="bold"
+                                    android:textSize="15sp"
+                                    android:textColor="@color/text_dark"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"/>
+                                <TextView
+                                    android:text="Detect falls and auto-trigger SOS"
+                                    android:textSize="12sp"
+                                    android:textColor="@color/text_grey"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"/>
+                            </LinearLayout>
+                            <com.google.android.material.switchmaterial.SwitchMaterial
+                                android:id="@+id/switchFallDetection"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+                        </LinearLayout>
+                        
+                        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/divider_color"/>
 
-                        <com.google.android.material.switchmaterial.SwitchMaterial
-                            android:id="@+id/switchNightMode"
-                            android:text="Auto-arm Shake &amp; Scream at Night (22:00–06:00)"
-                            android:layout_marginTop="8dp"
+                        <!-- Night Mode -->
+                        <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"/>
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:paddingVertical="12dp">
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+                                <TextView
+                                    android:text="Auto Night Mode"
+                                    android:textStyle="bold"
+                                    android:textSize="15sp"
+                                    android:textColor="@color/text_dark"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"/>
+                                <TextView
+                                    android:text="Auto-arm sensors between 10 PM - 6 AM"
+                                    android:textSize="12sp"
+                                    android:textColor="@color/text_grey"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"/>
+                            </LinearLayout>
+                            <com.google.android.material.switchmaterial.SwitchMaterial
+                                android:id="@+id/switchNightMode"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
 
-                        <!-- Voice Authentication Config -->
+                <!-- SOS Options Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:cardElevation="4dp"
+                    app:cardCornerRadius="20dp"
+                    app:cardBackgroundColor="@color/white"
+                    app:strokeWidth="0dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="20dp">
+                        
+                        <!-- Section Header -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:layout_marginBottom="8dp">
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:src="@android:drawable/ic_dialog_alert"
+                                app:tint="@color/m3_crimson_sos"/>
+                            <TextView
+                                android:text="SOS Options"
+                                android:textStyle="bold"
+                                android:textSize="18sp"
+                                android:textColor="@color/text_dark"
+                                android:layout_marginStart="12dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+                        </LinearLayout>
+                        
                         <TextView
-                            android:text="Voice Authentication"
-                            android:textStyle="bold"
-                            android:textColor="@color/sheild_blue_dark"
-                            android:layout_marginTop="16dp"
+                            android:text="Configure how SOS alerts are sent"
+                            android:textSize="13sp"
+                            android:textColor="@color/text_grey"
+                            android:layout_marginBottom="16dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
 
-                        <com.google.android.material.switchmaterial.SwitchMaterial
-                            android:id="@+id/switchVoiceAuth"
-                            android:text="Use Safe-Word to cancel SOS"
-                            android:layout_marginTop="4dp"
+                        <!-- Silent SOS -->
+                        <LinearLayout
                             android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:paddingVertical="12dp">
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+                                <TextView
+                                    android:text="Silent SOS"
+                                    android:textStyle="bold"
+                                    android:textSize="15sp"
+                                    android:textColor="@color/text_dark"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"/>
+                                <TextView
+                                    android:text="No sound or popup alerts"
+                                    android:textSize="12sp"
+                                    android:textColor="@color/text_grey"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"/>
+                            </LinearLayout>
+                            <com.google.android.material.switchmaterial.SwitchMaterial
+                                android:id="@+id/switchSilentSos"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+                        </LinearLayout>
+                        
+                        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/divider_color"/>
+
+                        <!-- Multi-Channel -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:paddingVertical="12dp">
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+                                <TextView
+                                    android:text="Multi-Channel Alert"
+                                    android:textStyle="bold"
+                                    android:textSize="15sp"
+                                    android:textColor="@color/text_dark"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"/>
+                                <TextView
+                                    android:text="Share via WhatsApp, Telegram, etc."
+                                    android:textSize="12sp"
+                                    android:textColor="@color/text_grey"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"/>
+                            </LinearLayout>
+                            <com.google.android.material.switchmaterial.SwitchMaterial
+                                android:id="@+id/switchMultiChannelSos"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+                        </LinearLayout>
+                        
+                        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/divider_color"/>
+
+                        <!-- Auto Callback -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:paddingVertical="12dp">
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+                                <TextView
+                                    android:text="Auto Callback"
+                                    android:textStyle="bold"
+                                    android:textSize="15sp"
+                                    android:textColor="@color/text_dark"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"/>
+                                <TextView
+                                    android:text="Fake call 30s after SOS"
+                                    android:textSize="12sp"
+                                    android:textColor="@color/text_grey"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"/>
+                            </LinearLayout>
+                            <com.google.android.material.switchmaterial.SwitchMaterial
+                                android:id="@+id/switchAutoCallback"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Voice Authentication Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:cardElevation="4dp"
+                    app:cardCornerRadius="20dp"
+                    app:cardBackgroundColor="@color/white"
+                    app:strokeWidth="0dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="20dp">
+                        
+                        <!-- Section Header -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:layout_marginBottom="8dp">
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:src="@android:drawable/ic_btn_speak_now"
+                                app:tint="@color/m3_navy_primary"/>
+                            <TextView
+                                android:text="Voice Authentication"
+                                android:textStyle="bold"
+                                android:textSize="18sp"
+                                android:textColor="@color/text_dark"
+                                android:layout_marginStart="12dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+                        </LinearLayout>
+                        
+                        <TextView
+                            android:text="Cancel accidental SOS with your secret safe word"
+                            android:textSize="13sp"
+                            android:textColor="@color/text_grey"
+                            android:layout_marginBottom="16dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
+
+                        <!-- Enable Voice Auth -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:paddingVertical="12dp">
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+                                <TextView
+                                    android:text="Enable Safe Word"
+                                    android:textStyle="bold"
+                                    android:textSize="15sp"
+                                    android:textColor="@color/text_dark"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"/>
+                                <TextView
+                                    android:text="Speak your word to cancel SOS"
+                                    android:textSize="12sp"
+                                    android:textColor="@color/text_grey"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"/>
+                            </LinearLayout>
+                            <com.google.android.material.switchmaterial.SwitchMaterial
+                                android:id="@+id/switchVoiceAuth"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+                        </LinearLayout>
 
                         <com.google.android.material.textfield.TextInputLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="Secret Safe-Word"
-                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+                            android:hint="Your Secret Safe Word (to cancel SOS)"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            app:boxCornerRadiusTopStart="12dp"
+                            app:boxCornerRadiusTopEnd="12dp"
+                            app:boxCornerRadiusBottomStart="12dp"
+                            app:boxCornerRadiusBottomEnd="12dp"
+                            app:endIconMode="password_toggle"
+                            android:layout_marginTop="8dp">
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/etSafeWord"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:inputType="textPassword"/>
                         </com.google.android.material.textfield.TextInputLayout>
-
-                        <com.google.android.material.switchmaterial.SwitchMaterial
-                            android:id="@+id/switchFallDetection"
-                            android:text="Detect fall / impact and auto-trigger SOS"
-                            android:layout_marginTop="8dp"
+                        
+                        <View
                             android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/divider_color"
+                            android:layout_marginVertical="16dp"/>
+                        
+                        <!-- SOS Trigger Word Section -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:layout_marginBottom="8dp">
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:src="@android:drawable/ic_dialog_alert"
+                                app:tint="@color/m3_crimson_sos"/>
+                            <TextView
+                                android:text="SOS Trigger Word"
+                                android:textStyle="bold"
+                                android:textSize="15sp"
+                                android:textColor="@color/text_dark"
+                                android:layout_marginStart="8dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+                        </LinearLayout>
+                        
+                        <TextView
+                            android:text="Say this word during a fake call to secretly trigger SOS"
+                            android:textSize="12sp"
+                            android:textColor="@color/text_grey"
+                            android:layout_marginBottom="8dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                        
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="SOS Trigger Word (e.g., pineapple, umbrella)"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            app:boxCornerRadiusTopStart="12dp"
+                            app:boxCornerRadiusTopEnd="12dp"
+                            app:boxCornerRadiusBottomStart="12dp"
+                            app:boxCornerRadiusBottomEnd="12dp"
+                            app:boxStrokeColor="@color/m3_crimson_sos">
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etSosTriggerWord"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="text"/>
+                        </com.google.android.material.textfield.TextInputLayout>
+                        
+                        <TextView
+                            android:text="Auto-saved as you type (min. 3 characters)"
+                            android:textSize="11sp"
+                            android:textColor="@color/text_grey"
+                            android:layout_marginTop="4dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Journey Tracking Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:cardElevation="4dp"
+                    app:cardCornerRadius="20dp"
+                    app:cardBackgroundColor="@color/white"
+                    app:strokeWidth="0dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="20dp">
+                        
+                        <!-- Section Header -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:layout_marginBottom="8dp">
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:src="@android:drawable/ic_menu_directions"
+                                app:tint="@color/m3_navy_primary"/>
+                            <TextView
+                                android:text="Journey Tracking"
+                                android:textStyle="bold"
+                                android:textSize="18sp"
+                                android:textColor="@color/text_dark"
+                                android:layout_marginStart="12dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+                        </LinearLayout>
+                        
+                        <TextView
+                            android:text="Options for when journey tracking is active"
+                            android:textSize="13sp"
+                            android:textColor="@color/text_grey"
+                            android:layout_marginBottom="16dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
 
-                        <com.google.android.material.switchmaterial.SwitchMaterial
-                            android:id="@+id/switchInactivityCheck"
-                            android:text="Journey inactivity check-in (10 minutes of stillness)"
-                            android:layout_marginTop="8dp"
+                        <!-- Inactivity Check -->
+                        <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"/>
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:paddingVertical="12dp">
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+                                <TextView
+                                    android:text="Inactivity Check"
+                                    android:textStyle="bold"
+                                    android:textSize="15sp"
+                                    android:textColor="@color/text_dark"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"/>
+                                <TextView
+                                    android:text="Alert after 10 mins of stillness"
+                                    android:textSize="12sp"
+                                    android:textColor="@color/text_grey"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"/>
+                            </LinearLayout>
+                            <com.google.android.material.switchmaterial.SwitchMaterial
+                                android:id="@+id/switchInactivityCheck"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+                        </LinearLayout>
+                        
+                        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/divider_color"/>
 
-                        <com.google.android.material.switchmaterial.SwitchMaterial
-                            android:id="@+id/switchSafeArrival"
-                            android:text="Send &quot;Arrived safely&quot; SMS when tracking stops"
-                            android:layout_marginTop="8dp"
+                        <!-- Safe Arrival -->
+                        <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"/>
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:paddingVertical="12dp">
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+                                <TextView
+                                    android:text="Safe Arrival SMS"
+                                    android:textStyle="bold"
+                                    android:textSize="15sp"
+                                    android:textColor="@color/text_dark"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"/>
+                                <TextView
+                                    android:text="Send SMS when tracking stops"
+                                    android:textSize="12sp"
+                                    android:textColor="@color/text_grey"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"/>
+                            </LinearLayout>
+                            <com.google.android.material.switchmaterial.SwitchMaterial
+                                android:id="@+id/switchSafeArrival"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
 
-                        <Button
+                <!-- Unsafe Zone Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardElevation="4dp"
+                    app:cardCornerRadius="20dp"
+                    app:cardBackgroundColor="@color/white"
+                    app:strokeWidth="0dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="20dp">
+                        
+                        <!-- Section Header -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:layout_marginBottom="8dp">
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:src="@android:drawable/ic_dialog_map"
+                                app:tint="@color/m3_crimson_sos"/>
+                            <TextView
+                                android:text="Unsafe Zones"
+                                android:textStyle="bold"
+                                android:textSize="18sp"
+                                android:textColor="@color/text_dark"
+                                android:layout_marginStart="12dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+                        </LinearLayout>
+                        
+                        <TextView
+                            android:text="Mark areas where SOS becomes HIGH-RISK priority"
+                            android:textSize="13sp"
+                            android:textColor="@color/text_grey"
+                            android:layout_marginBottom="16dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                        
+                        <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMarkUnsafeZone"
-                            android:text="Mark current location as unsafe zone"
-                            android:layout_marginTop="12dp"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:backgroundTint="@color/sheild_blue_primary"/>
-
-                        <Button
+                            android:layout_height="52dp"
+                            android:text="Mark Current Location"
+                            app:cornerRadius="12dp"
+                            android:backgroundTint="@color/m3_crimson_sos"
+                            app:icon="@android:drawable/ic_menu_add"
+                            app:iconGravity="textStart"
+                            android:layout_marginBottom="8dp"/>
+                        
+                        <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnClearUnsafeZone"
-                            android:text="Clear unsafe zone"
-                            android:layout_marginTop="8dp"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:backgroundTint="@color/text_grey"/>
+                            android:layout_height="52dp"
+                            android:text="Clear Unsafe Zone"
+                            app:cornerRadius="12dp"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            app:strokeColor="@color/text_grey"
+                            android:textColor="@color/text_grey"
+                            app:icon="@android:drawable/ic_menu_close_clear_cancel"
+                            app:iconGravity="textStart"
+                            app:iconTint="@color/text_grey"/>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
@@ -627,100 +1379,367 @@
             android:id="@+id/viewInfo"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="16dp"
+            android:background="@color/sheild_background"
             android:visibility="gone">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-                <TextView
-                    android:text="Help Center"
-                    android:textSize="22sp"
-                    android:textStyle="bold"
-                    android:layout_marginBottom="16dp"
-                    android:layout_width="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="16dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="32dp">
+                
+                <!-- Header -->
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/sheild_blue_primary"/>
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="20dp">
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@android:drawable/ic_menu_help"
+                        app:tint="@color/m3_navy_primary"/>
+                    <TextView
+                        android:text="Help Center"
+                        android:textSize="28sp"
+                        android:textStyle="bold"
+                        android:layout_marginStart="12dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/m3_navy_primary"/>
+                </LinearLayout>
                     
+                <!-- Emergency Helplines Card -->
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
-                    app:cardCornerRadius="24dp"
-                    app:cardElevation="2dp"
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="4dp"
                     app:cardBackgroundColor="@color/white">
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:padding="20dp">
-                        <TextView
-                            android:text="Emergency Helplines"
-                            android:textStyle="bold"
-                            android:textSize="20sp"
-                            android:textColor="@color/m3_navy_primary"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="16dp"/>
                         
-                        <!-- Police Tile -->
-                        <RelativeLayout
+                        <!-- Section Header -->
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="12dp">
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:layout_marginBottom="16dp">
                             <ImageView
-                                android:id="@+id/iconPolice"
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                android:src="@android:drawable/ic_dialog_map"
-                                app:tint="@color/m3_navy_primary"/>
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:src="@android:drawable/ic_menu_call"
+                                app:tint="@color/m3_crimson_sos"/>
                             <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_toEndOf="@id/iconPolice"
-                                android:layout_marginStart="16dp"
-                                android:text="Police Emergency"
+                                android:text="Emergency Helplines"
                                 android:textStyle="bold"
-                                android:textSize="16sp"/>
-                            <TextView
+                                android:textSize="18sp"
+                                android:textColor="@color/text_dark"
+                                android:layout_marginStart="12dp"
                                 android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+                        </LinearLayout>
+                        
+                        <!-- Police -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:paddingVertical="12dp"
+                            android:background="?attr/selectableItemBackground"
+                            android:clickable="true"
+                            android:focusable="true">
+                            <com.google.android.material.card.MaterialCardView
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                app:cardCornerRadius="24dp"
+                                app:cardElevation="0dp"
+                                app:cardBackgroundColor="@color/m3_navy_container">
+                                <ImageView
+                                    android:layout_width="24dp"
+                                    android:layout_height="24dp"
+                                    android:layout_gravity="center"
+                                    android:src="@android:drawable/stat_sys_phone_call"
+                                    app:tint="@color/m3_navy_primary"/>
+                            </com.google.android.material.card.MaterialCardView>
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
                                 android:layout_height="wrap_content"
-                                android:layout_toEndOf="@id/iconPolice"
-                                android:layout_marginStart="16dp"
-                                android:layout_marginTop="20dp"
-                                android:text="Dial 100"
-                                android:textColor="@color/text_grey"/>
-                        </RelativeLayout>
+                                android:orientation="vertical"
+                                android:layout_marginStart="16dp">
+                                <TextView
+                                    android:text="Police Emergency"
+                                    android:textStyle="bold"
+                                    android:textSize="16sp"
+                                    android:textColor="@color/text_dark"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"/>
+                                <TextView
+                                    android:text="Dial 100"
+                                    android:textSize="14sp"
+                                    android:textColor="@color/text_grey"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"/>
+                            </LinearLayout>
+                            <TextView
+                                android:text="100"
+                                android:textSize="20sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/m3_crimson_sos"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+                        </LinearLayout>
 
-                        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" android:layout_marginVertical="12dp"/>
+                        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/divider_color"/>
 
                         <!-- Women Helpline -->
-                        <RelativeLayout
+                        <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:paddingVertical="12dp"
+                            android:background="?attr/selectableItemBackground"
+                            android:clickable="true"
+                            android:focusable="true">
+                            <com.google.android.material.card.MaterialCardView
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                app:cardCornerRadius="24dp"
+                                app:cardElevation="0dp"
+                                app:cardBackgroundColor="@color/m3_status_green_light">
+                                <ImageView
+                                    android:layout_width="24dp"
+                                    android:layout_height="24dp"
+                                    android:layout_gravity="center"
+                                    android:src="@android:drawable/ic_menu_help"
+                                    app:tint="@color/m3_status_green"/>
+                            </com.google.android.material.card.MaterialCardView>
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:layout_marginStart="16dp">
+                                <TextView
+                                    android:text="Women Helpline"
+                                    android:textStyle="bold"
+                                    android:textSize="16sp"
+                                    android:textColor="@color/text_dark"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"/>
+                                <TextView
+                                    android:text="24/7 Support"
+                                    android:textSize="14sp"
+                                    android:textColor="@color/text_grey"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"/>
+                            </LinearLayout>
+                            <TextView
+                                android:text="1091"
+                                android:textSize="20sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/m3_status_green"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+                        </LinearLayout>
+
+                        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/divider_color"/>
+
+                        <!-- Ambulance -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:paddingVertical="12dp"
+                            android:background="?attr/selectableItemBackground"
+                            android:clickable="true"
+                            android:focusable="true">
+                            <com.google.android.material.card.MaterialCardView
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                app:cardCornerRadius="24dp"
+                                app:cardElevation="0dp"
+                                app:cardBackgroundColor="#FFEBEE">
+                                <ImageView
+                                    android:layout_width="24dp"
+                                    android:layout_height="24dp"
+                                    android:layout_gravity="center"
+                                    android:src="@android:drawable/ic_menu_directions"
+                                    app:tint="@color/m3_crimson_sos"/>
+                            </com.google.android.material.card.MaterialCardView>
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:layout_marginStart="16dp">
+                                <TextView
+                                    android:text="Ambulance"
+                                    android:textStyle="bold"
+                                    android:textSize="16sp"
+                                    android:textColor="@color/text_dark"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"/>
+                                <TextView
+                                    android:text="Medical Emergency"
+                                    android:textSize="14sp"
+                                    android:textColor="@color/text_grey"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"/>
+                            </LinearLayout>
+                            <TextView
+                                android:text="102"
+                                android:textSize="20sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/m3_crimson_sos"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- How to Use Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="4dp"
+                    app:cardBackgroundColor="@color/white">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="20dp">
+                        
+                        <!-- Section Header -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:layout_marginBottom="16dp">
                             <ImageView
-                                android:id="@+id/iconWomen"
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                android:src="@android:drawable/ic_menu_help"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:src="@android:drawable/ic_menu_info_details"
                                 app:tint="@color/m3_navy_primary"/>
                             <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_toEndOf="@id/iconWomen"
-                                android:layout_marginStart="16dp"
-                                android:text="Women Helpline"
+                                android:text="Quick Guide"
                                 android:textStyle="bold"
-                                android:textSize="16sp"/>
-                            <TextView
+                                android:textSize="18sp"
+                                android:textColor="@color/text_dark"
+                                android:layout_marginStart="12dp"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_toEndOf="@id/iconWomen"
-                                android:layout_marginStart="16dp"
-                                android:layout_marginTop="20dp"
-                                android:text="Dial 1091"
-                                android:textColor="@color/text_grey"/>
-                        </RelativeLayout>
+                                android:layout_height="wrap_content"/>
+                        </LinearLayout>
+
+                        <TextView
+                            android:text="1. SOS Button"
+                            android:textStyle="bold"
+                            android:textSize="15sp"
+                            android:textColor="@color/text_dark"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                        <TextView
+                            android:text="Tap the big red button to send emergency SMS with your live location to saved contacts."
+                            android:textSize="13sp"
+                            android:textColor="@color/text_grey"
+                            android:layout_marginBottom="12dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                        
+                        <TextView
+                            android:text="2. Fake Call"
+                            android:textStyle="bold"
+                            android:textSize="15sp"
+                            android:textColor="@color/text_dark"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                        <TextView
+                            android:text="Simulates an incoming call so you can excuse yourself from uncomfortable situations."
+                            android:textSize="13sp"
+                            android:textColor="@color/text_grey"
+                            android:layout_marginBottom="12dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                        
+                        <TextView
+                            android:text="3. Journey Tracking"
+                            android:textStyle="bold"
+                            android:textSize="15sp"
+                            android:textColor="@color/text_dark"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                        <TextView
+                            android:text="Share your live location with trusted contacts during late-night travels."
+                            android:textSize="13sp"
+                            android:textColor="@color/text_grey"
+                            android:layout_marginBottom="12dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                        
+                        <TextView
+                            android:text="4. Shake Detection"
+                            android:textStyle="bold"
+                            android:textSize="15sp"
+                            android:textColor="@color/text_dark"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                        <TextView
+                            android:text="Shake your phone vigorously to trigger a fake call without touching the screen."
+                            android:textSize="13sp"
+                            android:textColor="@color/text_grey"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- About Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="4dp"
+                    app:cardBackgroundColor="@color/m3_navy_container">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="20dp"
+                        android:gravity="center">
+                        <TextView
+                            android:text="SHEild"
+                            android:textStyle="bold"
+                            android:textSize="24sp"
+                            android:textColor="@color/m3_navy_primary"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                        <TextView
+                            android:text="Your Guardian Angel"
+                            android:textSize="14sp"
+                            android:textColor="@color/m3_navy_primary"
+                            android:layout_marginTop="4dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                        <TextView
+                            android:text="Version 1.0"
+                            android:textSize="12sp"
+                            android:textColor="@color/text_grey"
+                            android:layout_marginTop="8dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
